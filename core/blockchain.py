@@ -32,20 +32,20 @@ class Blockchain():
         self.write()
     def teardown(self):
         os.remove('./data/blockchain.dat')
-    def validate(self, Block):
+    def validate(self, _Block, allow_future_blocks):
         # Block can not be in the future
-        if Block.timestamp > time.time():
+        if _Block.timestamp > time.time() and allow_future_blocks == False:
             return False
-        prev_Block_Dict = blockchain[Block.index - 1]
+        prev_Block_Dict = self.chain[_Block.index - 1]
         prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict['prev_hash'], prev_Block_Dict['transfers'])
         # compare Blocks
-        if prev_Block.hash != Block.prev_hash or prev_Block.next_hash != Block.hash or prev_Block.index != (Block.index - 1) or prev_Block.next_timestamp != Block.timestamp:
+        if prev_Block.hash != _Block.prev_hash or prev_Block.next_hash != _Block.hash or prev_Block.index != (_Block.index - 1) or prev_Block.next_timestamp != _Block.timestamp:
             return False
         # validate Block hash
         block_hash = hashlib.sha384()
-        block_hash.update('{index}{prev_hash}{timestamp}'.format(index=Block.index, prev_hash=Block.prev_hash, timestamp=Block.timestamp).encode('utf-8'))
+        block_hash.update('{index}{prev_hash}{timestamp}'.format(index=_Block.index, prev_hash=_Block.prev_hash, timestamp=_Block.timestamp).encode('utf-8'))
         _hash = str(block_hash.hexdigest())
-        if block_hash != Block.hash or block_hash != prev_Block.next_block_hash:
+        if _hash != _Block.hash or _hash != prev_Block.next_hash:
             return False
         # validate Transfers in Block using Transfer class
 
