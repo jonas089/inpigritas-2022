@@ -2,8 +2,8 @@ import os, hashlib, pickle, time, base64
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA384
-from accounts import Keys
-from blockchain import Blockchain
+from core.accounts import Keys
+from core.blockchain import Blockchain
 class Transfer():
     def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem, height, keypair):
         self.sender = sender
@@ -17,14 +17,15 @@ class Transfer():
         self.height = height
     def new(self):
         # public_key_pem: export
+        self.public_key_pem = self.Keys.public_key_pem()
         self.timestamp = time.time()
         tx = '{sender}{recipient}{amount}{timestamp}{public_key_pem}'.format(sender=self.sender, recipient=self.recipient, amount=self.amount, timestamp=self.timestamp, public_key_pem=self.Keys.public_key_pem())
         _hash = SHA384.new()
         _hash.update(tx.encode('utf-8'))
         self.transaction_hash = str(_hash.hexdigest())
         cypher = PKCS1_v1_5.new(self.Keys.private_key())
-        self.signature = cypher.sign(_hash)
-        signature_export = base64.b64encode(self.signature).decode('utf-8')
+        signature = cypher.sign(_hash)
+        self.signature = base64.b64encode(signature).decode('utf-8')
     def finalize(self):
         return {
             'sender': self.sender,

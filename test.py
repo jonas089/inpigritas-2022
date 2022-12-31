@@ -1,6 +1,6 @@
-from transfer import Transfer
-from blockchain import Block, Blockchain
-from accounts import Keys
+from core.transfer import Transfer
+from core.blockchain import Block, Blockchain
+from core.accounts import Keys
 import time
 from chainspec import BLOCKTIME
 # 1. initialize a new, empty Blockchain instance
@@ -24,3 +24,4 @@ new_Block = Block(None, None, None, None, None, None, [])
 new_Block.new(prev_Block)
 Instance.add_finalized_block(new_Block.finalize())
 print(Instance.chain)
+print("Transaction valid: ", tx.validate())
