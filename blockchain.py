@@ -1,5 +1,6 @@
 import os, time, hashlib, pickle
 import chainspec
+from transfer import Transfer
 class Blockchain():
     def __init__(self):
         self.chain = []
@@ -29,6 +30,24 @@ class Blockchain():
         self.update()
     def teardown(self):
         os.remove('./data/blockchain.dat')
+    def validate(self, Block):
+        # Block can not be in the future
+        if Block.timestamp > time.time():
+            return False
+        prev_Block_Dict = blockchain[Block.index - 1]
+        prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict[prev_hash], prev_Block_Dict['transfers'])
+        # compare Blocks
+        if prev_Block.hash != Block.prev_hash or prev_Block.next_hash != Block.hash or prev_Block.index != (Block.index - 1) or prev_Block.next_timestamp != Block.timestamp:
+            return False
+        # validate Block hash
+        block_hash = hashlib.sha384()
+        block_hash.update('{index}{prev_hash}{timestamp}'.format(index=Block.index, prev_hash=Block.prev_hash, timestamp=Block.timestamp).encode('utf-8'))
+        _hash = str(block_hash.hexdigest())
+        if block_hash != Block.hash or block_hash != prev_Block.next_block_hash:
+            return False
+        # validate Transfers in Block using Transfer class
+
+        return True
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):
         self.index = index
@@ -84,8 +103,7 @@ class Block():
             'prev_hash':self.prev_hash,
             'transfers':self.transfers
         }
-    def validate(self):
-        pass
+
 def tests():
     ''' Create empty Blocks
     chain = Blockchain()
