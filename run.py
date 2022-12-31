@@ -1,5 +1,5 @@
 from api import main
-from node import sync
+from client import sync
 from multiprocessing import Process, Value
 if __name__ == '__main__':
     sync_process = Process(target=sync)
