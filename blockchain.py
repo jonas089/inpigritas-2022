@@ -1,6 +1,8 @@
-import os, time, hashlib, pickle
+import os, time, hashlib, pickle, base64
 import chainspec
-from transfer import Transfer
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA384
 class Blockchain():
     def __init__(self):
         self.chain = []
@@ -19,6 +21,7 @@ class Blockchain():
     def write(self):
         with open('./data/blockchain.dat', 'wb') as chain_file:
             pickle.dump(self.chain, chain_file)
+        self.update()
     def add_finalized_block(self, Block):
         # Read txpool for current Block and append transactions
         if os.path.exists('./txpool/{index}.dat'.format(index=Block['index'])):
@@ -27,7 +30,6 @@ class Blockchain():
                 os.remove('./txpool/{index}.dat'.format(index=Block['index']))
         self.chain.append(Block)
         self.write()
-        self.update()
     def teardown(self):
         os.remove('./data/blockchain.dat')
     def validate(self, Block):
@@ -35,7 +37,7 @@ class Blockchain():
         if Block.timestamp > time.time():
             return False
         prev_Block_Dict = blockchain[Block.index - 1]
-        prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict[prev_hash], prev_Block_Dict['transfers'])
+        prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict['prev_hash'], prev_Block_Dict['transfers'])
         # compare Blocks
         if prev_Block.hash != Block.prev_hash or prev_Block.next_hash != Block.hash or prev_Block.index != (Block.index - 1) or prev_Block.next_timestamp != Block.timestamp:
             return False
@@ -57,11 +59,14 @@ class Block():
         self.next_hash = next_hash
         self.prev_hash = prev_hash
         self.transfers = transfers
-    def new(self, _Blockchain):
-        self.index = len(_Blockchain.chain)
+    def new(self, prev_Block):
+        if prev_Block == None:
+            self.index = 0
+        else:
+            self.index = prev_Block.index + 1
         if self.index != 0:
-            self.prev_hash = _Blockchain.chain[-1]['block_hash']
-            self.timestamp = _Blockchain.chain[-1]['next_timestamp']
+            self.prev_hash = prev_Block.hash
+            self.timestamp = prev_Block.next_timestamp
         else:
             # Genesis Block
             self.transfers.append(
@@ -124,4 +129,4 @@ def tests():
     chain = Blockchain()
     chain.update()
     print(chain.chain)
-tests()
+#tests()

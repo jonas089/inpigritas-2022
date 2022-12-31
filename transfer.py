@@ -5,7 +5,7 @@ from Crypto.Hash import SHA384
 from accounts import Keys
 from blockchain import Blockchain
 class Transfer():
-    def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem):
+    def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem, height, keypair):
         self.sender = sender
         self.recipient = recipient
         self.amount = amount
@@ -13,12 +13,9 @@ class Transfer():
         self.transaction_hash = tx_hash
         self.signature = signature
         self.public_key_pem = public_key_pem
-        self.Keys = None
-        self.Blockchain = None
+        self.Keys = keypair
+        self.height = height
     def new(self):
-        self.Keys = Keys()
-        self.Blockchain = Blockchain()
-        self.Blockchain.update()
         # public_key_pem: export
         self.timestamp = time.time()
         tx = '{sender}{recipient}{amount}{timestamp}{public_key_pem}'.format(sender=self.sender, recipient=self.recipient, amount=self.amount, timestamp=self.timestamp, public_key_pem=self.Keys.public_key_pem())
@@ -39,20 +36,18 @@ class Transfer():
             'signature': self.signature
         }
     def add_to_pool(self):
-        # current block height
-        height = len(self.Blockchain.chain)
         is_empty_pool = False
-        if not os.path.exists('./txpool/{height}.dat'.format(height=height)):
+        if not os.path.exists('./txpool/{height}.dat'.format(height=self.height)):
             is_empty_pool = True
-            open('./txpool/{height}.dat'.format(height=height), 'x')
+            open('./txpool/{height}.dat'.format(height=self.height), 'x')
         # backup if not empty
         pool = []
         if is_empty_pool == False:
-            with open('./txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
+            with open('./txpool/{height}.dat'.format(height=self.height), 'rb') as pool_file:
                 pool = pickle.load(pool_file)
         # validate first.
         pool.append(self.finalize())
-        with open('./txpool/{height}.dat'.format(height=height), 'wb') as pool_file:
+        with open('./txpool/{height}.dat'.format(height=self.height), 'wb') as pool_file:
             pickle.dump(pool, pool_file)
     def validate(self):
         signature = base64.b64decode(self.signature.encode('utf-8'))
