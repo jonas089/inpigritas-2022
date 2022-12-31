@@ -13,6 +13,20 @@ def get_tx_pool_from_peer(host, port):
     return json.loads(pool.text)
 def sync():
     while True:
-        pool = get_tx_pool_from_peer(HOST, PORT)
-        print(pool)
+
+        height = get_height_from_peer(HOST, PORT)
+        print(height)
+
+
+        '''
+
+        blockchain = get_blockchain_from_peer(HOST, PORT)
+        print(blockchain)
+
+
+        '''
+
+
+
+
         time.sleep(CHAIN_SYNC_INTERVAL)
