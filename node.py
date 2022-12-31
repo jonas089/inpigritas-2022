@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify
-node = Flask(__name__)
+import requests, json
+import time
+def Blockchain():
+    blockchain = requests.get('http://127.0.0.1:8080/blockchain')
+    print(blockchain)
 
-@node.route('/', methods = ['GET'])
-def DummyRoute():
-    return '[]'
-
-if __name__ == '__main__':
-    node.run(threaded=True, host='localhost', port=8080, use_reloader=False)
+def sync():
+    while True:
+        print('Sync process: alive')
+        time.sleep(5)
