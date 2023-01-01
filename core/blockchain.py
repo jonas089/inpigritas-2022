@@ -18,18 +18,13 @@ class Blockchain():
                 self.chain = pickle.load(chain_file)
         except Exception as empty:
             self.chain = []
+    def read(self):
+        with open('./data/blockchain.dat', 'rb') as chain_file:
+            return pickle.load(chain_file)
     def write(self):
         with open('./data/blockchain.dat', 'wb') as chain_file:
             pickle.dump(self.chain, chain_file)
         self.update()
-    def add_finalized_block(self, Block):
-        # Read txpool for current Block and append transactions
-        if os.path.exists('./txpool/{index}.dat'.format(index=Block['index'])):
-            with open('./txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
-                Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
-                os.remove('./txpool/{index}.dat'.format(index=Block['index']))
-        self.chain.append(Block)
-        self.write()
     def teardown(self):
         os.remove('./data/blockchain.dat')
     def validate(self, _Block, allow_future_blocks):
@@ -48,8 +43,18 @@ class Blockchain():
         if _hash != _Block.hash or _hash != prev_Block.next_hash:
             return False
         # validate Transfers in Block using Transfer class
-
         return True
+    def length(self):
+        with open('./data/blockchain.dat', 'rb') as chain_file:
+            return len(pickle.load(chain_file))
+    def add_finalized_block(self, Block):
+        # Read txpool for current Block and append transactions
+        if os.path.exists('./txpool/{index}.dat'.format(index=Block['index'])):
+            with open('./txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
+                Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
+                os.remove('./txpool/{index}.dat'.format(index=Block['index']))
+        self.chain.append(Block)
+        self.write()
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):
         self.index = index
