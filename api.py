@@ -10,9 +10,10 @@ def InpigritasApi():
     '''
 @api.route('/blockchain', methods=['GET'])
 def block_chain():
+    index = int(request.args.get('height'))
     b = Blockchain()
     b.update()
-    return b.chain
+    return b.chain[index:]
 @api.route('/height', methods=['GET'])
 def height():
     b = Blockchain()

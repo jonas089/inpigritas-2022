@@ -26,7 +26,8 @@ class Blockchain():
             pickle.dump(self.chain, chain_file)
         self.update()
     def teardown(self):
-        os.remove('./data/blockchain.dat')
+        if os.path.exists('./data/blockchain.dat'):
+            os.remove('./data/blockchain.dat')
     def validate(self, _Block, allow_future_blocks):
         # Block can not be in the future
         if _Block.timestamp > time.time() and allow_future_blocks == False:
