@@ -39,3 +39,10 @@ Example: n = 2/3 of total nodes operating. \
 Blocks are created locally on every node once time.time() == next_timestamp. \
 Transactions are stored in a txpool and will be included in a future block (era + n) where n is a constant integer. \
 Initial distribution of transferable assets happens in the Genesis Block. \
+
+## Limitations
+Scalability and Speed are not super high, also, Inpigritas is currently not a programmable blockchain. \
+Inpigritas is a personal portfolio project but feel free to use it if you find any Implementations for this Python-Blockchain. \
+Thanks to RSA signatures and Block creation/validation logic it can potentially offer moderate security to small systems / services. \
+It is possible to track and prove an assets origin using Inpigritas or a variation of it. \
+Use is at own Risk and this is not a production Blockchain!

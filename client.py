@@ -97,6 +97,7 @@ def sync():
         print('[Info]: Sync round complete')
         print(c.blockchain.chain)
         # before block creation, sync the txpool with all peers
+
         if c.next_block_timestamp() <= time.time():
             c.create_next_block()
             print('[Info] Block created: ', c.height())
