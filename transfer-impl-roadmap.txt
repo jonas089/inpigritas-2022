@@ -1,3 +1,6 @@
+[TBD: Transfers]
+
+
 Submit Transfer to network:
 
 n: current height
@@ -7,3 +10,13 @@ If Node does not have a txpool for the n+x th Block it creates one.
 Node saves transfer to txpool of n+x Block & sorts the txpool by timestamp.
 On block creation: Nodes sync their txpool for the current block.
 => Block creation will automatically delete the temp file for the current Block ( if any )
+
+Major advantage over including a Transfer in the current block is that the risk of a tx getting lost is super low.
+
+Validate Transfer:
+
+add balance checks
+
+Additional Security:
+
+hash block transfers to prevent order corruption or potential attacks
