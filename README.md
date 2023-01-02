@@ -1,7 +1,9 @@
 # Inpigritas 2022
 Experimental python blockchain project. \
 Whilst developing core functionality, all data will be stored / read using pickle \
-Database solution tbd. \
+Database solution tbd.
+## Inpigritas 2020 documentation for direct comparison and respective roadmap
+[Inpigritas2020 Github](https://github.com/jonas089/Inpigritas-2020-deprecated)
 
 ## Core overview
 1. Transfer class
