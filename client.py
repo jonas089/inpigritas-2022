@@ -2,6 +2,21 @@ import requests, json
 import time
 from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS
 from core.blockchain import Blockchain, Block
+
+'''
+|----------------------------------------------------------|
+|                    [Issues]
+| 1. All Nodes need to sync the Txpool before creating
+| a block.
+| A transfer submitted at the time of block creation
+| could corrupt the blockchain
+|
+|
+|----------------------------------------------------------|
+
+'''
+
+
 class Core:
     def __init__(self, _Blockchain):
         self.blockchain = _Blockchain
@@ -65,6 +80,9 @@ def sync():
                     peer_chain = cli.get_blockchain(c.height())
                     for block in peer_chain:
                         b = Block(block['index'], block['timestamp'], block['next_timestamp'], block['block_hash'], block['next_hash'], block['prev_hash'], block['transfers'])
+                        for tx in b.transfers:
+                            if tx.validate() == False:
+                                print('[Error]: Invalid transaction found in Block => Peer skipped: ', PEER)
                         if c.blockchain.validate(b, False) == True:
                             print('[Info]: Block valid')
                             instance.add_finalized_block(b.finalize())
@@ -76,21 +94,12 @@ def sync():
             except Exception as connerr:
                 print(connerr)
                 print('[Warning]: connection lost: ', PEER)
-
-
         print('[Info]: Sync round complete')
         print(c.blockchain.chain)
+        # before block creation, sync the txpool with all peers
         if c.next_block_timestamp() <= time.time():
-            print('[Info] Block created: ', c.height())
             c.create_next_block()
-
-        # if height match, sync txpool
-        # if height && timestamp match, create block
-        # otherwise sync blocks
-
-        # Test local Block creation
-        #print(c.next_block_timestamp())
-        #print(c.blockchain.chain)
+            print('[Info] Block created: ', c.height())
 
         '''
 
