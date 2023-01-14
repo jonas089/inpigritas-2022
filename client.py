@@ -2,7 +2,7 @@ import requests, json
 import time
 from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS
 from core.blockchain import Blockchain, Block
-
+from core.transfer import Transfer
 '''
 |----------------------------------------------------------|
 |                    [Issues]
@@ -22,6 +22,8 @@ class Core:
         self.blockchain = _Blockchain
     def next_block_timestamp(self):
         return self.blockchain.chain[-1]['next_timestamp']
+    def last_block_timestamp(self):
+        return self.blockchain.chain[-1]['timestamp']
     def height(self):
         return len(self.blockchain.chain)
     def create_next_block(self):
@@ -43,6 +45,8 @@ class ApiClient:
     def get_pool(self):
         pool = requests.get('http://{host}:{port}/txpool'.format(host=self.host, port=self.port))
         return json.loads(pool.text)
+
+
 def reset(_Blockchain):
     # delete current chain datafile
     _Blockchain.teardown()
@@ -96,8 +100,27 @@ def sync():
                 print('[Warning]: connection lost: ', PEER)
         print('[Info]: Sync round complete')
         print(c.blockchain.chain)
-        # before block creation, sync the txpool with all peers
 
+        # before block creation, sync the txpool with all peers
+        for PEER in TEST_PEERS:
+            cli = ApiClient(PEER['HOST'], PEER['PORT'])
+            with open('./txpool/{height}.dat'.format(height=c.height())) as pool_file:
+                local_pool = pickle.load(pool_file)
+            try:
+                peer_height = int(cli.get_height())
+                if peer_height == c.height():
+                    peer_pool = cli.get_pool()
+                    for tx in peer_pool:
+                        if not tx in local_pool:
+                            _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
+                            print("Validation result for Transaction in external Pool: ", _tx.validate())
+                            _tx.finalize()
+                            _tx.add_to_pool(c.height())
+            except Exception as connerr:
+                print(connerr)
+                print('[Warning]: connection lost: ', PEER)
+
+        # create a new block if it is time
         if c.next_block_timestamp() <= time.time():
             c.create_next_block()
             print('[Info] Block created: ', c.height())
@@ -114,3 +137,12 @@ def sync():
 
 
         time.sleep(CHAIN_SYNC_INTERVAL)
+
+
+'''
+
+Transaction takes effect on Balance after n block confirmations.
+Issue:
+    Front-running is possible and can potentially cause a chainsplit
+
+'''

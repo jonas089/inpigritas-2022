@@ -4,6 +4,7 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA384
 from core.accounts import Keys
 from core.blockchain import Blockchain
+from client import Core
 class Transfer():
     def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem, height, keypair):
         self.sender = sender
@@ -36,32 +37,49 @@ class Transfer():
             'transaction_hash': self.transaction_hash,
             'signature': self.signature
         }
-    def add_to_pool(self):
+    def add_to_pool(self, height):
         is_empty_pool = False
-        if not os.path.exists('./txpool/{height}.dat'.format(height=self.height)):
+        if not os.path.exists('./txpool/{height}.dat'.format(height=height)):
             is_empty_pool = True
-            open('./txpool/{height}.dat'.format(height=self.height), 'x')
+            open('./txpool/{height}.dat'.format(height=height), 'x')
         # backup if not empty
         pool = []
         if is_empty_pool == False:
-            with open('./txpool/{height}.dat'.format(height=self.height), 'rb') as pool_file:
+            with open('./txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
                 pool = pickle.load(pool_file)
         # validate first.
         pool.append(self.finalize())
-        with open('./txpool/{height}.dat'.format(height=self.height), 'wb') as pool_file:
+        with open('./txpool/{height}.dat'.format(height=height), 'wb') as pool_file:
             pickle.dump(pool, pool_file)
-    def validate(self):
+
+    def validate(self, height):
+        # perform balance checks locally
+        '''
+            ... TBD ...
+        '''
+        # timestamp
+        instance = Blockchain()
+        instance.update()
+        c = Core(instance)
+        if not self.timestamp < c.last_block_timestamp():
+            return '[Error]: Timestamp not valid for current Block'
+        '''
+            ... TBD ...
+        '''
+        # validate signature
         signature = base64.b64decode(self.signature.encode('utf-8'))
         tx = '{sender}{recipient}{amount}{timestamp}{public_key_pem}'.format(sender=self.sender, recipient=self.recipient, amount=self.amount, timestamp=self.timestamp, public_key_pem=self.Keys.public_key_pem())
         _hash = SHA384.new()
         _hash.update(tx.encode('utf-8'))
         cypher = PKCS1_v1_5.new(RSA.importKey(self.public_key_pem))
-        # check signature
+        # verify
         return cypher.verify(_hash, signature)
 
+'''
 def tests():
     tx = Transfer('sender', 'recipient', 10, None, None, None, None)
     tx.new()
-    tx.add_to_pool()
+    tx.add_to_pool(0)
     print(tx.finalize())
 #tests()
+'''
