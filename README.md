@@ -3,6 +3,11 @@ Experimental python blockchain project. \
 Improved version of Inpigritas-2020 ( see below ) \
 Whilst developing core functionality, all data will be stored / read using pickle \
 Database solution tbd.
+
+## Milestones
+**07.02.2022**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally
+
+
 ## Inpigritas 2020 documentation for direct comparison and respective roadmap
 [Inpigritas2020 Github](https://github.com/jonas089/Inpigritas-2020-deprecated)
 
