@@ -24,7 +24,7 @@ def txpool():
     height = get_local_height()
     if not os.path.exists('./txpool/{height}.dat'.format(height=height)):
         return '[]'
-    with open('./txpool/{height}.dat'.format(height=height)) as pool_file:
+    with open('./txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
         try:
             return pickle.load(pool_file)
         except Exception as Empty:

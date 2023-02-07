@@ -3,6 +3,16 @@ from core.blockchain import Block, Blockchain
 from core.accounts import Keys
 import time, os
 from chainspec import BLOCKTIME
+
+''' #Genesis Block Creation
+Instance = Blockchain()
+Instance.new()
+genesis_Block = Block(None, None, None, None, None, None, [])
+genesis_Block.new(None)
+Instance.add_finalized_block(genesis_Block.finalize())
+'''
+
+
 '''
 if not os.path.exists('./txpool'):
     os.mkdir('./txpool')
@@ -22,6 +32,7 @@ Instance.add_finalized_block(genesis_Block.finalize())
 def tx_chain_info():
     b = Blockchain()
     b.update()
+    print(b.chain)
     h = b.chain[-1]
     l = len(b.chain)
     return (h, l)
@@ -29,17 +40,24 @@ def tx_chain_info():
 # * time.time > last_block_time
 # * effective_height = current_height + n, n!=0
 # 4. Send a Transaction that is to be included in Block #1
+_Keys = Keys()
 info = tx_chain_info()
-print(info.0)
-print(info.1)
+print(info)
+print(info[0]['timestamp'])
+print(info[0]['next_timestamp'])
+print(info[1])
 
-'''
-tx = Transfer('sender', 'recipient', 10, None, None, None, None, 1, _Keys)
-tx.new()
-effective_height = get_local_height
-tx.add_to_pool(effective_height)
-'''
+if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
+    print("[Warning]: wait for chain to sync or block to be created.")
 
+else:
+
+
+    tx = Transfer('sender', 'recipient', 10, None, None, None, None, 1, _Keys)
+    tx.new()
+    effective_height = info[1] + 2
+    tx.add_to_pool(effective_height)
+    print("transaction added to pool.")
 
 '''
 
