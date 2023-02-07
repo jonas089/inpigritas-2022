@@ -52,7 +52,10 @@ class Blockchain():
         # Read txpool for current Block and append transactions
         if os.path.exists('./txpool/{index}.dat'.format(index=Block['index'])):
             with open('./txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
-                Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
+                try:
+                    Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
+                except Exception as Empty:
+                    Block['transfers'] = [*Block['transfers'], *[]]
                 os.remove('./txpool/{index}.dat'.format(index=Block['index']))
         self.chain.append(Block)
         self.write()

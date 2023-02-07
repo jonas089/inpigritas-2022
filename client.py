@@ -1,5 +1,6 @@
 import requests, json
 import time
+import os, pickle
 from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS
 from core.blockchain import Blockchain, Block
 from core.transfer import Transfer
@@ -85,7 +86,10 @@ def sync():
                     for block in peer_chain:
                         b = Block(block['index'], block['timestamp'], block['next_timestamp'], block['block_hash'], block['next_hash'], block['prev_hash'], block['transfers'])
                         for tx in b.transfers:
-                            if tx.validate() == False:
+                            instance = Blockchain()
+                            instance.update()
+                            c = Core(instance)
+                            if tx.validate(c) == False:
                                 print('[Error]: Invalid transaction found in Block => Peer skipped: ', PEER)
                         if c.blockchain.validate(b, False) == True:
                             print('[Info]: Block valid')
@@ -103,16 +107,25 @@ def sync():
 
         # before block creation, sync the txpool with all peers
         for PEER in TEST_PEERS:
+            local_pool = []
             cli = ApiClient(PEER['HOST'], PEER['PORT'])
-            with open('./txpool/{height}.dat'.format(height=c.height())) as pool_file:
-                local_pool = pickle.load(pool_file)
+            if not os.path.exists('./txpool/{height}.dat'.format(height=c.height())):
+                pass
+            else:
+                with open('./txpool/{height}.dat'.format(height=c.height())) as pool_file:
+                    local_pool = pickle.load(pool_file)
+            # sync and add to pool
             try:
                 peer_height = int(cli.get_height())
                 if peer_height == c.height():
                     peer_pool = cli.get_pool()
                     for tx in peer_pool:
                         if not tx in local_pool:
+                            instance = Blockchain()
+                            instance.update()
+                            c = Core(instance)
                             _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
+                            # TBD: revert if invalid, add balance checks
                             print("Validation result for Transaction in external Pool: ", _tx.validate())
                             _tx.finalize()
                             _tx.add_to_pool(c.height())

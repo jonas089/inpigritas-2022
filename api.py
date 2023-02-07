@@ -15,7 +15,7 @@ def block_chain():
     b.update()
     return b.chain[index:]
 @api.route('/height', methods=['GET'])
-def height():
+def get_local_height():
     b = Blockchain()
     b.update()
     return str(len(b.chain))
@@ -25,6 +25,9 @@ def txpool():
     if not os.path.exists('./txpool/{height}.dat'.format(height=height)):
         return '[]'
     with open('./txpool/{height}.dat'.format(height=height)) as pool_file:
-        return pickle.load(pool_file)
+        try:
+            return pickle.load(pool_file)
+        except Exception as Empty:
+            return []
 def main():
     api.run(threaded=True, host=HOST, port=PORT)
