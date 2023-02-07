@@ -112,7 +112,7 @@ def sync():
             if not os.path.exists('./txpool/{height}.dat'.format(height=c.height())):
                 pass
             else:
-                with open('./txpool/{height}.dat'.format(height=c.height())) as pool_file:
+                with open('./txpool/{height}.dat'.format(height=c.height()), 'rb') as pool_file:
                     local_pool = pickle.load(pool_file)
             # sync and add to pool
             try:

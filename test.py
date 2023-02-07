@@ -3,7 +3,7 @@ from core.blockchain import Block, Blockchain
 from core.accounts import Keys
 import time, os
 from chainspec import BLOCKTIME
-
+'''
 if not os.path.exists('./txpool'):
     os.mkdir('./txpool')
 # 1. initialize a new, empty Blockchain instance
@@ -16,10 +16,33 @@ timestamp = time.time()
 genesis_Block = Block(None, None, None, None, None, None, [])
 genesis_Block.new(None)
 Instance.add_finalized_block(genesis_Block.finalize())
+
+'''
+# TBD: remove this function from api.py and move it in a helper file.
+def tx_chain_info():
+    b = Blockchain()
+    b.update()
+    h = b.chain[-1]
+    l = len(b.chain)
+    return (h, l)
+# Conditions that have to be met:
+# * time.time > last_block_time
+# * effective_height = current_height + n, n!=0
 # 4. Send a Transaction that is to be included in Block #1
+info = tx_chain_info()
+print(info.0)
+print(info.1)
+
+'''
 tx = Transfer('sender', 'recipient', 10, None, None, None, None, 1, _Keys)
 tx.new()
-tx.add_to_pool()
+effective_height = get_local_height
+tx.add_to_pool(effective_height)
+'''
+
+
+'''
+
 # 5. Create and validate Block #1 that should hold the transfer
 prev_Block_Dict = Instance.chain[0] # Genesis Block
 prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict['prev_hash'], prev_Block_Dict['transfers'])
@@ -30,3 +53,5 @@ Instance.add_finalized_block(new_Block.finalize())
 print(Instance.chain)
 print("Transaction valid: ", tx.validate())
 print("Block valid: ", Instance.validate(new_Block, True))
+
+'''
