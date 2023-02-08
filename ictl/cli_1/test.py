@@ -45,11 +45,6 @@ test_nonce = 0
 for i in range(0, 500):
     _Keys = Keys()
     info = tx_chain_info()
-    print(info)
-    print(info[0]['timestamp'])
-    print(info[0]['next_timestamp'])
-    print(info[1])
-
     if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
         print("[Warning]: wait for chain to sync or block to be created.")
 
