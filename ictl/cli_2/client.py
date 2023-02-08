@@ -89,7 +89,8 @@ def sync():
                         instance = Blockchain()
                         instance.update()
                         c = Core(instance)
-                        if tx.validate(c) == False:
+                        _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
+                        if _tx.validate(c) == False:
                             print('[Error]: Invalid transaction found in Block => Peer skipped: ', PEER)
                             time.sleep(600)
                     if c.blockchain.validate(b, False) == True:
@@ -119,7 +120,6 @@ def sync():
             peer_height = int(cli.get_height())
             if peer_height == c.height():
                 peer_pool = cli.get_pool()
-                print("[Info]: Peer Pool -> ", peer_pool)
                 for tx in peer_pool:
                     if not tx in local_pool:
                         instance = Blockchain()
