@@ -41,24 +41,27 @@ def tx_chain_info():
 # * time.time > last_block_time
 # * effective_height = current_height + n, n!=0
 # 4. Send a Transaction that is to be included in Block #1
-_Keys = Keys()
-info = tx_chain_info()
-print(info)
-print(info[0]['timestamp'])
-print(info[0]['next_timestamp'])
-print(info[1])
+test_nonce = 0
+for i in range(0, 500):
+    _Keys = Keys()
+    info = tx_chain_info()
+    print(info)
+    print(info[0]['timestamp'])
+    print(info[0]['next_timestamp'])
+    print(info[1])
 
-if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
-    print("[Warning]: wait for chain to sync or block to be created.")
+    if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
+        print("[Warning]: wait for chain to sync or block to be created.")
 
-else:
+    else:
 
-
-    tx = Transfer('sender', 'recipient', 10, None, None, None, None, 1, _Keys)
-    tx.new()
-    effective_height = info[1] + 2
-    tx.add_to_pool(effective_height)
-    print("transaction added to pool.")
+        r = 'recipient' + str(test_nonce)
+        tx = Transfer('sender', r, 10, None, None, None, None, 1, _Keys)
+        tx.new()
+        effective_height = info[1] + 2
+        tx.add_to_pool(effective_height)
+        print("transaction added to pool.")
+    test_nonce += 1
 
 '''
 # 5. Create and validate Block #1 that should hold the transfer
