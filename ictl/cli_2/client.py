@@ -91,6 +91,7 @@ def sync():
                             c = Core(instance)
                             if tx.validate(c) == False:
                                 print('[Error]: Invalid transaction found in Block => Peer skipped: ', PEER)
+                                time.sleep(600)
                         if c.blockchain.validate(b, False) == True:
                             print('[Info]: Block valid')
                             instance.add_finalized_block(b.finalize())
@@ -98,12 +99,11 @@ def sync():
                             print('[Error]: Block did not pass validaton => Peer skipped: ', PEER)
                             continue
                 else:
-                    print('[Info] nothing to sync')
+                    print('[Info]: Nothing to sync')
             except Exception as connerr:
                 print(connerr)
-                print('[Warning]: connection lost: ', PEER)
-        print('[Info]: Sync round complete')
-        print(c.blockchain.chain)
+                print('[Warning]: Connection lost: ', PEER)
+        print('[Info]: Done! @', str(time.time()))
 
         # before block creation, sync the txpool with all peers
         for PEER in TEST_PEERS:
@@ -126,17 +126,18 @@ def sync():
                             c = Core(instance)
                             _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
                             # TBD: revert if invalid, add balance checks
-                            print("Validation result for Transaction in external Pool: ", _tx.validate())
+                            print("[Info]: Tx valid -> ", _tx.validate())
                             _tx.finalize()
                             _tx.add_to_pool(c.height())
+                            print("[Success]: Tx synced!")
             except Exception as connerr:
                 print(connerr)
-                print('[Warning]: connection lost: ', PEER)
+                print('[Warning]: Connection lost: ', PEER)
 
         # create a new block if it is time
         if c.next_block_timestamp() <= time.time():
             c.create_next_block()
-            print('[Info] Block created: ', c.height())
+            print('[Success]: Block created -> ', c.height())
 
         '''
 
