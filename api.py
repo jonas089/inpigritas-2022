@@ -3,6 +3,11 @@ from chainspec import HOST, PORT
 import os, pickle
 from core.blockchain import Blockchain
 api = Flask(__name__)
+
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 @api.route('/', methods=['GET'])
 def InpigritasApi():
     return '''
