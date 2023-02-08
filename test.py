@@ -3,6 +3,7 @@ from core.blockchain import Block, Blockchain
 from core.accounts import Keys
 import time, os
 from chainspec import BLOCKTIME
+from tqdm import tqdm
 
 ''' #Genesis Block Creation
 Instance = Blockchain()
@@ -41,7 +42,10 @@ def tx_chain_info():
 # * effective_height = current_height + n, n!=0
 # 4. Send a Transaction that is to be included in Block #1
 test_nonce = 0
-for i in range(0, 20):
+n = 20
+progress_bar = tqdm(total=n)
+progress_bar.set_description("Creating Transfers locally: ")
+for i in range(0, n):
     _Keys = Keys()
     info = tx_chain_info()
     if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
@@ -56,6 +60,7 @@ for i in range(0, 20):
         tx.add_to_pool(effective_height)
         print("transaction added to pool.")
     test_nonce += 1
+    progress_bar.update(1)
 
 '''
 # 5. Create and validate Block #1 that should hold the transfer
