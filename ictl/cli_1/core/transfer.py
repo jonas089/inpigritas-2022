@@ -31,11 +31,11 @@ class Transfer():
         return {
             'sender': self.sender,
             'recipient': self.recipient,
-            'timestamp': self.timestamp,
             'amount': self.amount,
-            'public_key': self.public_key_pem,
+            'timestamp': self.timestamp,
             'transaction_hash': self.transaction_hash,
-            'signature': self.signature
+            'signature': self.signature,
+            'public_key': self.public_key_pem
         }
     def add_to_pool(self, height):
         is_empty_pool = False
