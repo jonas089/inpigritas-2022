@@ -59,6 +59,11 @@ class Blockchain():
                 os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
         self.chain.append(Block)
         self.write()
+    def add_external_finalized_block(self, Block):
+        self.chain.append(Block)
+        self.write()
+        if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'):
+            os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):
         self.index = index

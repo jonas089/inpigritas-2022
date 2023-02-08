@@ -33,7 +33,6 @@ Instance.add_finalized_block(genesis_Block.finalize())
 def tx_chain_info():
     b = Blockchain()
     b.update()
-    print(b.chain)
     h = b.chain[-1]
     l = len(b.chain)
     return (h, l)
@@ -42,7 +41,7 @@ def tx_chain_info():
 # * effective_height = current_height + n, n!=0
 # 4. Send a Transaction that is to be included in Block #1
 test_nonce = 0
-for i in range(0, 500):
+for i in range(0, 20):
     _Keys = Keys()
     info = tx_chain_info()
     if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):

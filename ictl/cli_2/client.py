@@ -95,7 +95,7 @@ def sync():
                             time.sleep(600)
                     if c.blockchain.validate(b, False) == True:
                         print('[Info]: Block valid')
-                        instance.add_finalized_block(b.finalize())
+                        instance.add_external_finalized_block(b.finalize())
                     else:
                         print('[Error]: Block did not pass validaton => Peer skipped: ', PEER)
                         continue
@@ -121,14 +121,20 @@ def sync():
             if peer_height == c.height():
                 peer_pool = cli.get_pool()
                 for tx in peer_pool:
-                    if not tx in local_pool:
+                    # check tx hash instead
+                    is_duplicate = False
+                    if len(local_pool) != 0:
+                        for __tx in local_pool:
+                            if __tx['transaction_hash'] == tx['transaction_hash']:
+                                is_duplicate = True
+
+                    if is_duplicate == False:
                         instance = Blockchain()
                         instance.update()
                         c = Core(instance)
                         _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
                         # TBD: revert if invalid, add balance checks
                         print("[Info]: Tx valid -> ", _tx.validate(c))
-                        _tx.finalize()
                         _tx.add_to_pool(c.height())
                         print("[Success]: Tx synced!")
             #except Exception as connerr:
