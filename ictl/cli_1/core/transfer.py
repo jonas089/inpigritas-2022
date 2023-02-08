@@ -33,7 +33,7 @@ class Transfer():
             'recipient': self.recipient,
             'timestamp': self.timestamp,
             'amount': self.amount,
-            'public_key': self.Keys.public_key_pem(),
+            'public_key': self.public_key_pem,
             'transaction_hash': self.transaction_hash,
             'signature': self.signature
         }
@@ -61,14 +61,14 @@ class Transfer():
             ... TBD ...
         '''
         # timestamp
-        if not self.timestamp < c.last_block_timestamp():
+        if not self.timestamp < core_instance.last_block_timestamp():
             return '[Error]: Timestamp not valid for current Block'
         '''
             ... TBD ...
         '''
         # validate signature
         signature = base64.b64decode(self.signature.encode('utf-8'))
-        tx = '{sender}{recipient}{amount}{timestamp}{public_key_pem}'.format(sender=self.sender, recipient=self.recipient, amount=self.amount, timestamp=self.timestamp, public_key_pem=self.Keys.public_key_pem())
+        tx = '{sender}{recipient}{amount}{timestamp}{public_key_pem}'.format(sender=self.sender, recipient=self.recipient, amount=self.amount, timestamp=self.timestamp, public_key_pem=self.public_key_pem)
         _hash = SHA384.new()
         _hash.update(tx.encode('utf-8'))
         cypher = PKCS1_v1_5.new(RSA.importKey(self.public_key_pem))

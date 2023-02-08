@@ -56,7 +56,7 @@ else:
 
     tx = Transfer('sender', 'recipient', 10, None, None, None, None, 1, _Keys)
     tx.new()
-    effective_height = info[1] + 5
+    effective_height = info[1] + 2
     tx.add_to_pool(effective_height)
     print("transaction added to pool.")
 

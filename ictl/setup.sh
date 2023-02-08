@@ -1,6 +1,11 @@
 # For now takes 2 arguments, name for client 1 and name for client 2.
 # In the future: use looping to create multiple instances
 
+lsof -i tcp:8081
+lsof -i tcp:8080
+
+
+
 # Setup client instance
 _ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

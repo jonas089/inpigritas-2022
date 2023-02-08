@@ -79,30 +79,30 @@ def sync():
         # 1st check height of peers
         for PEER in TEST_PEERS:
             cli = ApiClient(PEER['HOST'], PEER['PORT'])
-            try:
-                peer_height = int(cli.get_height())
-                if peer_height > c.height():
-                    peer_chain = cli.get_blockchain(c.height())
-                    for block in peer_chain:
-                        b = Block(block['index'], block['timestamp'], block['next_timestamp'], block['block_hash'], block['next_hash'], block['prev_hash'], block['transfers'])
-                        for tx in b.transfers:
-                            instance = Blockchain()
-                            instance.update()
-                            c = Core(instance)
-                            if tx.validate(c) == False:
-                                print('[Error]: Invalid transaction found in Block => Peer skipped: ', PEER)
-                                time.sleep(600)
-                        if c.blockchain.validate(b, False) == True:
-                            print('[Info]: Block valid')
-                            instance.add_finalized_block(b.finalize())
-                        else:
-                            print('[Error]: Block did not pass validaton => Peer skipped: ', PEER)
-                            continue
-                else:
-                    print('[Info]: Nothing to sync')
-            except Exception as connerr:
-                print(connerr)
-                print('[Warning]: Connection lost: ', PEER)
+            #try:
+            peer_height = int(cli.get_height())
+            if peer_height > c.height():
+                peer_chain = cli.get_blockchain(c.height())
+                for block in peer_chain:
+                    b = Block(block['index'], block['timestamp'], block['next_timestamp'], block['block_hash'], block['next_hash'], block['prev_hash'], block['transfers'])
+                    for tx in b.transfers:
+                        instance = Blockchain()
+                        instance.update()
+                        c = Core(instance)
+                        if tx.validate(c) == False:
+                            print('[Error]: Invalid transaction found in Block => Peer skipped: ', PEER)
+                            time.sleep(600)
+                    if c.blockchain.validate(b, False) == True:
+                        print('[Info]: Block valid')
+                        instance.add_finalized_block(b.finalize())
+                    else:
+                        print('[Error]: Block did not pass validaton => Peer skipped: ', PEER)
+                        continue
+            else:
+                print('[Info]: Nothing to sync')
+            #except Exception as connerr:
+            #    print(connerr)
+            #    print('[Warning]: Connection lost: ', PEER)
         print('[Info]: Done! @', str(time.time()))
 
         # before block creation, sync the txpool with all peers
@@ -115,24 +115,25 @@ def sync():
                 with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=c.height()), 'rb') as pool_file:
                     local_pool = pickle.load(pool_file)
             # sync and add to pool
-            try:
-                peer_height = int(cli.get_height())
-                if peer_height == c.height():
-                    peer_pool = cli.get_pool()
-                    for tx in peer_pool:
-                        if not tx in local_pool:
-                            instance = Blockchain()
-                            instance.update()
-                            c = Core(instance)
-                            _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
-                            # TBD: revert if invalid, add balance checks
-                            print("[Info]: Tx valid -> ", _tx.validate())
-                            _tx.finalize()
-                            _tx.add_to_pool(c.height())
-                            print("[Success]: Tx synced!")
-            except Exception as connerr:
-                print(connerr)
-                print('[Warning]: Connection lost: ', PEER)
+            #try:
+            peer_height = int(cli.get_height())
+            if peer_height == c.height():
+                peer_pool = cli.get_pool()
+                print("[Info]: Peer Pool -> ", peer_pool)
+                for tx in peer_pool:
+                    if not tx in local_pool:
+                        instance = Blockchain()
+                        instance.update()
+                        c = Core(instance)
+                        _tx = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
+                        # TBD: revert if invalid, add balance checks
+                        print("[Info]: Tx valid -> ", _tx.validate(c))
+                        _tx.finalize()
+                        _tx.add_to_pool(c.height())
+                        print("[Success]: Tx synced!")
+            #except Exception as connerr:
+            #    print(connerr)
+            #    print('[Warning]: Connection lost: ', PEER)
 
         # create a new block if it is time
         if c.next_block_timestamp() <= time.time():
