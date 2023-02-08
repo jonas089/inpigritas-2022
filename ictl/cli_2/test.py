@@ -58,7 +58,6 @@ for i in range(0, n):
         tx.new()
         effective_height = info[1] + 2
         tx.add_to_pool(effective_height)
-        print("transaction added to pool.")
     test_nonce += 1
     progress_bar.update(1)
 
