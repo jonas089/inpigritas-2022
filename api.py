@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from chainspec import HOST, PORT
+from chainspec import HOST, PORT, RELATIVE_PATH
 import os, pickle
 from core.blockchain import Blockchain
 api = Flask(__name__)
@@ -27,9 +27,9 @@ def get_local_height():
 @api.route('/txpool', methods=['GET'])
 def txpool():
     height = get_local_height()
-    if not os.path.exists('./txpool/{height}.dat'.format(height=height)):
+    if not os.path.exists(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height)):
         return '[]'
-    with open('./txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
+    with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
         try:
             return pickle.load(pool_file)
         except Exception as Empty:

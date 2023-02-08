@@ -1,7 +1,7 @@
 import requests, json
 import time
 import os, pickle
-from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS
+from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS, RELATIVE_PATH
 from core.blockchain import Blockchain, Block
 from core.transfer import Transfer
 '''
@@ -109,10 +109,10 @@ def sync():
         for PEER in TEST_PEERS:
             local_pool = []
             cli = ApiClient(PEER['HOST'], PEER['PORT'])
-            if not os.path.exists('./txpool/{height}.dat'.format(height=c.height())):
+            if not os.path.exists(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=c.height())):
                 pass
             else:
-                with open('./txpool/{height}.dat'.format(height=c.height()), 'rb') as pool_file:
+                with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=c.height()), 'rb') as pool_file:
                     local_pool = pickle.load(pool_file)
             # sync and add to pool
             try:

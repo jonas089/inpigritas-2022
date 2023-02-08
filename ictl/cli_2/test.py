@@ -28,6 +28,7 @@ genesis_Block.new(None)
 Instance.add_finalized_block(genesis_Block.finalize())
 
 '''
+
 # TBD: remove this function from api.py and move it in a helper file.
 def tx_chain_info():
     b = Blockchain()
@@ -60,7 +61,6 @@ else:
     print("transaction added to pool.")
 
 '''
-
 # 5. Create and validate Block #1 that should hold the transfer
 prev_Block_Dict = Instance.chain[0] # Genesis Block
 prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict['prev_hash'], prev_Block_Dict['transfers'])
@@ -71,5 +71,4 @@ Instance.add_finalized_block(new_Block.finalize())
 print(Instance.chain)
 print("Transaction valid: ", tx.validate())
 print("Block valid: ", Instance.validate(new_Block, True))
-
 '''

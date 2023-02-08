@@ -4,6 +4,7 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA384
 from core.accounts import Keys
 from core.blockchain import Blockchain
+from chainspec import RELATIVE_PATH
 class Transfer():
     def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem, height, keypair):
         self.sender = sender
@@ -38,20 +39,20 @@ class Transfer():
         }
     def add_to_pool(self, height):
         is_empty_pool = False
-        if not os.path.exists('./txpool'):
-            os.mkdir('./txpool')
-        if not os.path.exists('./txpool/{height}.dat'.format(height=height)):
+        if not os.path.exists(RELATIVE_PATH + '/txpool'):
+            os.mkdir(RELATIVE_PATH + '/txpool')
+        if not os.path.exists(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height)):
             is_empty_pool = True
-            open('./txpool/{height}.dat'.format(height=height), 'x')
+            open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height), 'x')
 
         # backup if not empty
         pool = []
         if is_empty_pool == False:
-            with open('./txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
+            with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height), 'rb') as pool_file:
                 pool = pickle.load(pool_file)
         # validate first.
         pool.append(self.finalize())
-        with open('./txpool/{height}.dat'.format(height=height), 'wb') as pool_file:
+        with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height), 'wb') as pool_file:
             pickle.dump(pool, pool_file)
 
     def validate(self, core_instance):

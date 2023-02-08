@@ -1,5 +1,5 @@
 import os, time, hashlib, pickle, base64
-import chainspec
+from chainspec import ACCOUNT, PREMINE, BLOCKTIME, RELATIVE_PATH
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA384
@@ -7,27 +7,27 @@ class Blockchain():
     def __init__(self):
         self.chain = []
     def new(self):
-        if not os.path.exists('./data/blockchain.dat'):
-            open('./data/blockchain.dat', 'x')
+        if not os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
+            open(RELATIVE_PATH + '/data/blockchain.dat', 'x')
         else:
-            os.remove('./data/blockchain.dat')
-            open('./data/blockchain.dat', 'x')
+            os.remove(RELATIVE_PATH + '/data/blockchain.dat')
+            open(RELATIVE_PATH + '/data/blockchain.dat', 'x')
     def update(self):
         try:
-            with open('./data/blockchain.dat', 'rb') as chain_file:
+            with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
                 self.chain = pickle.load(chain_file)
         except Exception as empty:
             self.chain = []
     def read(self):
-        with open('./data/blockchain.dat', 'rb') as chain_file:
+        with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
             return pickle.load(chain_file)
     def write(self):
-        with open('./data/blockchain.dat', 'wb') as chain_file:
+        with open(RELATIVE_PATH + '/data/blockchain.dat', 'wb') as chain_file:
             pickle.dump(self.chain, chain_file)
         self.update()
     def teardown(self):
-        if os.path.exists('./data/blockchain.dat'):
-            os.remove('./data/blockchain.dat')
+        if os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
+            os.remove(RELATIVE_PATH + '/data/blockchain.dat')
     def validate(self, _Block, allow_future_blocks):
         # Block can not be in the future
         if _Block.timestamp > time.time() and allow_future_blocks == False:
@@ -46,17 +46,17 @@ class Blockchain():
         # validate Transfers in Block using Transfer class
         return True
     def length(self):
-        with open('./data/blockchain.dat', 'rb') as chain_file:
+        with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
             return len(pickle.load(chain_file))
     def add_finalized_block(self, Block):
         # Read txpool for current Block and append transactions
-        if os.path.exists('./txpool/{index}.dat'.format(index=Block['index'])):
-            with open('./txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
+        if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
+            with open(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
                 try:
                     Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
                 except Exception as Empty:
                     Block['transfers'] = [*Block['transfers'], *[]]
-                os.remove('./txpool/{index}.dat'.format(index=Block['index']))
+                os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
         self.chain.append(Block)
         self.write()
 class Block():
@@ -82,13 +82,13 @@ class Block():
                 # Genesis Transaction
                 {
                     'sender':'0x00',
-                    'recipient':chainspec.ACCOUNT,
-                    'amount':chainspec.PREMINE,
+                    'recipient':ACCOUNT,
+                    'amount':PREMINE,
                     'timestamp': time.time()
                 }
             )
             self.timestamp = time.time()
-        self.next_timestamp = self.timestamp + chainspec.BLOCKTIME
+        self.next_timestamp = self.timestamp + BLOCKTIME
         block_hash = hashlib.sha384()
         block_hash.update('{index}{prev_hash}{timestamp}'.format(index=self.index, prev_hash=self.prev_hash, timestamp=self.timestamp).encode('utf-8'))
         self.hash = str(block_hash.hexdigest())

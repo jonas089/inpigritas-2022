@@ -15,11 +15,11 @@ python3 ../genesis.py
 mkdir ./cli_1
 mkdir ./cli_1/data
 
-cp ./data/* ./cli_1/data/
+cp ../data/* ./cli_1/data/
 
 mkdir ./cli_2
 mkdir ./cli_2/data
-cp ./data/* ./cli_2/data/
+cp ../data/* ./cli_2/data/
 
 cp ../*.py ./cli_1/
 cp ../*.py ./cli_2/
