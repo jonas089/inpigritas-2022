@@ -21,10 +21,10 @@ def tx_chain_info():
 # * effective_height = current_height + n, n!=0
 # 4. Send a Transaction that is to be included in Block #1
 test_nonce = 0
-n = 20
+n = int(args.amount)
 progress_bar = tqdm(total=n)
 progress_bar.set_description("Creating Transfers locally: ")
-for i in range(0, int(args.amount)):
+for i in range(0, n):
     _Keys = Keys()
     info = tx_chain_info()
     if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
