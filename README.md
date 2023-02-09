@@ -7,6 +7,13 @@ Database solution tbd.
 ## Milestones
 **07.02.2022**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally
 
+## ictl - run an Inpigritas-network locally
+
+Tested on: MacOS
+1. See requirements.txt in root directory of the repo to install all python3 dependencies.
+2. **setup.sh** => create 2 copies of the Inpigritas core, named cli_1 and cli_2
+3. **start.sh** => run cli_1 and cli_2 in a single cmd tab. Blocks will be created according to chainspec.py in "artifacts/cli-1" and "artifacts/cli-2" chainspecs have to be the same for both clients, except for the ports they run at / sync with respectively.
+
 
 ## Inpigritas 2020 documentation for direct comparison and respective roadmap
 [Inpigritas2020 Github](https://github.com/jonas089/Inpigritas-2020-deprecated)
