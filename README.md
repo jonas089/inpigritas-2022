@@ -1,7 +1,7 @@
 # Inpigritas 2022
 Experimental python blockchain project. \
-Improved version of Inpigritas-2020 ( see below ) \
-Whilst developing core functionality, all data will be stored / read using pickle \
+Will be used for R&D Work \
+Whilst developing core functionality, all data is stored / read using pickle \
 Database solution tbd.
 
 ## Milestones
