@@ -22,8 +22,8 @@ Tested on: MacOS
 4. Balance
 
 ## Transfer validation
-TBD: pubkey => address => signature ( proof of identity ) \
-1 account is bound to 1 address.
+Transaction data ( hash of tx ) is signed using an RSA private key and the signature is validated by peers. \
+Balance/ Accounting logic is yet to be implemented. As of now, all Transactions are valid as long as the given signature is valid.
 
 ## API
 Nodes communicate by calling endpoints of each others API instance. \
