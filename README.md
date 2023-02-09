@@ -59,5 +59,6 @@ Thanks to RSA signatures and Block creation/validation logic it can potentially 
 It is possible to track and prove an assets origin using Inpigritas or a variation of it. \
 Use is at own Risk and this is not a production Blockchain!
 
-## Inpigritas 2020 documentation for direct comparison and respective roadmap
+## History
+I've been working on Inpigritas for years. The initial version was unmaintainable so I decided to create a new repo and re-factor the initial prototype:
 [Inpigritas2020 Github](https://github.com/jonas089/Inpigritas-2020-deprecated)
