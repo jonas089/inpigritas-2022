@@ -4,19 +4,6 @@ import os, pickle
 from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS, RELATIVE_PATH
 from core.blockchain import Blockchain, Block
 from core.transfer import Transfer
-'''
-|----------------------------------------------------------|
-|                    [Issues]
-| 1. All Nodes need to sync the Txpool before creating
-| a block.
-| A transfer submitted at the time of block creation
-| could corrupt the blockchain
-|
-|
-|----------------------------------------------------------|
-
-'''
-
 
 class Core:
     def __init__(self, _Blockchain):
