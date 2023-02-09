@@ -28,7 +28,7 @@ Balance/ Accounting logic is yet to be implemented. As of now, all Transactions 
 ## API
 Nodes communicate by calling endpoints of each others API instance. \
 The API backend is programmed in Python-Flask. \
-Synchronization and API are spun up through the multiprocessing python library. ( see run.py ) \
+Synchronization and API are spun up through the multiprocessing python library. ( see run.py )
 
 ## Genesis
 Genesis Block is not included in validation process. \
@@ -50,7 +50,7 @@ If a majority (n) of peers is hacked, the network is corrupt. \
 Example: n = 2/3 of total nodes operating. \
 Blocks are created locally on every node once time.time() == next_timestamp. \
 Transactions are stored in a txpool and will be included in a future block (era + n) where n is a constant integer. \
-Initial distribution of transferable assets happens in the Genesis Block. \
+Initial distribution of transferable assets happens in the Genesis Block.
 
 ## Limitations
 Scalability and Speed are not super high as of today, memory overflow in Pickle implementation inevitable. Postgres or another scalable DB should be used to solve this in the future and allow for a potentially unlimited runtime of an Inpigritas Network. \
