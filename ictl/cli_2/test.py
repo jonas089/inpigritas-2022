@@ -14,12 +14,9 @@ def tx_chain_info():
     b = Blockchain()
     b.update()
     h = b.chain[-1]
-    l = len(b.chain)
+    l = b.height()
     return (h, l)
-# Conditions that have to be met:
-# * time.time > last_block_time
-# * effective_height = current_height + n, n!=0
-# 4. Send a Transaction that is to be included in Block #1
+
 test_nonce = 0
 n = int(args.amount)
 progress_bar = tqdm(total=n)

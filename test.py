@@ -14,7 +14,7 @@ def tx_chain_info():
     b = Blockchain()
     b.update()
     h = b.chain[-1]
-    l = len(b.chain)
+    l = b.height()
     return (h, l)
 
 test_nonce = 0

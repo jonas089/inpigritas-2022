@@ -55,13 +55,13 @@ class Transfer():
         with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height), 'wb') as pool_file:
             pickle.dump(pool, pool_file)
 
-    def validate(self, core_instance):
+    def validate(self, instance):
         # perform balance checks locally
         '''
             ... TBD ...
         '''
         # timestamp
-        if not self.timestamp < core_instance.last_block_timestamp():
+        if not self.timestamp < instance.last_block_timestamp():
             return '[Error]: Timestamp not valid for current Block'
         '''
             ... TBD ...

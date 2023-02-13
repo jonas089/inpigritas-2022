@@ -6,6 +6,7 @@ from Crypto.Hash import SHA384
 class Blockchain():
     def __init__(self):
         self.chain = []
+    # Storage
     def new(self):
         if not os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
             open(RELATIVE_PATH + '/data/blockchain.dat', 'x')
@@ -28,6 +29,24 @@ class Blockchain():
     def teardown(self):
         if os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
             os.remove(RELATIVE_PATH + '/data/blockchain.dat')
+    # Storage - Blocks
+    def add_finalized_block(self, Block):
+        # Read txpool for current Block and append transactions
+        if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
+            with open(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
+                try:
+                    Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
+                except Exception as Empty:
+                    Block['transfers'] = [*Block['transfers'], *[]]
+                os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
+        self.chain.append(Block)
+        self.write()
+    def add_external_finalized_block(self, Block):
+        self.chain.append(Block)
+        self.write()
+        if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
+            os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
+    # Validity / Integrity
     def validate(self, _Block, allow_future_blocks):
         # Block can not be in the future
         if _Block.timestamp > time.time() and allow_future_blocks == False:
@@ -45,25 +64,14 @@ class Blockchain():
             return False
         # validate Transfers in Block using Transfer class
         return True
-    def length(self):
-        with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
-            return len(pickle.load(chain_file))
-    def add_finalized_block(self, Block):
-        # Read txpool for current Block and append transactions
-        if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
-            with open(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']), 'rb') as pool_file:
-                try:
-                    Block['transfers'] = [*Block['transfers'], *pickle.load(pool_file)]
-                except Exception as Empty:
-                    Block['transfers'] = [*Block['transfers'], *[]]
-                os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
-        self.chain.append(Block)
-        self.write()
-    def add_external_finalized_block(self, Block):
-        self.chain.append(Block)
-        self.write()
-        if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
-            os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
+    # Info
+    def height(self):
+        return len(self.chain) + 1
+    def next_block_timestamp(self):
+        return self.chain[-1]['next_timestamp']
+    def last_block_timestamp(self):
+        return self.chain[-1]['timestamp']
+
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):
         self.index = index
