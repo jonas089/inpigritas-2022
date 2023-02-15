@@ -22,7 +22,7 @@ class Blockchain():
         with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
             return pickle.load(chain_file)
     def write(self):
-        with open(RELATIVE_PATH + '/data/blockchain.dat', 'wb') as chain_file:
+        with open(RELATIVE_PATH + '/data/blockchain.dat', 'wb+') as chain_file:
             pickle.dump(self.chain, chain_file)
         self.update()
     def teardown(self):
