@@ -11,16 +11,13 @@ log.setLevel(logging.ERROR)
 # Web
 @api.route('/', methods=['GET'])
 def InpigritasApi():
-    return '''
-    Inpigritas
-    '''
+    return "Inpigritas"
 
 # Consensus data
 @api.route('/read/blockchain', methods=['GET'])
 def GetBlockChain():
     index = int(request.args.get('height'))
     b = Blockchain()
-    b.update()
     return b.chain[index:]
 
 @api.route('/read/txpool', methods=['GET'])
@@ -38,13 +35,12 @@ def GetTxPool():
 @api.route('/propose/tx', methods=['POST'])
 def ProposeTx():
     tx = request.form.get('tx')
-    
+
 
 # Chain info
 @api.route('/status/height', methods=['GET'])
 def StatusHeight():
     b = Blockchain()
-    b.update()
     return str(b.height())
 
 # export

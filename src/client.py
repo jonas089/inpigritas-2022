@@ -5,6 +5,13 @@ from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS, RELATIVE_PATH
 from core.blockchain import Blockchain, Block
 from core.transfer import Transfer
 
+'''
+    TBD: introduce error types
+    split sync_blocks and sync_transactions up in specialized functions
+
+'''
+
+
 # This is to be moved
 class ApiClient:
     def __init__(self, host, port):
