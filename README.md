@@ -13,6 +13,7 @@ by [Carl Romedius](https://github.com/Rom3dius/)
 
 To run a local Inpigritas network simply run docker-compose up. If you make any changes to the source code simply run \
 `docker build -t inpigritas:latest .`
+![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker.png)
 
 ## Core containts
 1. Transfer class
@@ -28,7 +29,7 @@ Balance/ Accounting logic is yet to be implemented. As of now, all Transactions 
 Nodes communicate by calling endpoints of each others API instance. \
 The API backend is programmed in Python-Flask. \
 Synchronization and API are spun up through the multiprocessing python library. ( see run.py )
-
+![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/flask.png)
 ## Genesis
 Genesis Block is not included in validation process. \
 Every node needs a copy of the genesis block to be able to sync with the network. \
