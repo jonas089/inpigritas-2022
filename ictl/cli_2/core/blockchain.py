@@ -6,6 +6,7 @@ from Crypto.Hash import SHA384
 class Blockchain():
     def __init__(self):
         self.chain = []
+        self.update()
     # Storage
     def new(self):
         if not os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
@@ -71,6 +72,12 @@ class Blockchain():
         return self.chain[-1]['next_timestamp']
     def last_block_timestamp(self):
         return self.chain[-1]['timestamp']
+    def create_next_block(self):
+        prev_Block_Dict = self.chain[-1]
+        prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict['prev_hash'], prev_Block_Dict['transfers'])
+        next_Block = Block(None, None, None, None, None, None, [])
+        next_Block.new(prev_Block)
+        self.add_finalized_block(next_Block.finalize())
 
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):

@@ -1,5 +1,5 @@
 import os
-BLOCKTIME = 180 # 3 minutes
+BLOCKTIME = 30 # 30 seconds
 ACCOUNT = '0x00' # premine address
 PREMINE = 1_000_000
 HOST = 'localhost'

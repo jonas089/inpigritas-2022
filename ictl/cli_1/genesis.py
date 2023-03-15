@@ -1,11 +1,17 @@
 from core.blockchain import Block, Blockchain
 import os
-
-if not os.path.exists('./data'):
-    os.mkdir('./data')
-
+from chainspec import RELATIVE_PATH
+path = RELATIVE_PATH + '/data'
+print("Deleting Chain...")
+if not os.path.exists(path):
+    os.mkdir(path)
+    print(path, "yes")
+else:
+    if os.path.exists("{path}/blockchain.dat".format(path=path)):
+        os.remove("{path}/blockchain.dat".format(path=path))
 Instance = Blockchain()
 Instance.new()
 genesis_Block = Block(None, None, None, None, None, None, [])
 genesis_Block.new(None)
 Instance.add_finalized_block(genesis_Block.finalize())
+print("Genesis Block generated!")
