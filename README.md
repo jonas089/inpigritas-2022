@@ -5,8 +5,9 @@ Whilst developing core functionality, all data will be stored / read using pickl
 Database solution tbd.
 
 ## Milestones
-**07.02.2022**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally \
-**08.02.2022**: Introduction of "ictl" command line tool. Successfully synchronized 2900 Transactions in a single block.
+**07.02.2023**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally \
+**08.02.2023**: Introduction of "ictl" command line tool. Successfully synchronized 2900 Transactions in a single block. \
+**16.03.2023**: Merged docker 
 
 ## Run a local test-net 
 by [Carl Romedius](https://github.com/Rom3dius/)
