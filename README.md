@@ -32,7 +32,7 @@ The API backend is programmed in Python-Flask. \
 Synchronization and API are spun up through the multiprocessing python library. ( see run.py ) \
 See below the blockchain API endpoint as an example:
 ![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/flask.png)
-
+This endpoint returns blocks from height 7 onwards, which enables synchronization between nodes.
 ## Genesis
 Genesis Block is not included in validation process. \
 Every node needs a copy of the genesis block to be able to sync with the network. \
