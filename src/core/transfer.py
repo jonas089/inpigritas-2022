@@ -16,6 +16,7 @@ class Transfer():
         self.public_key_pem = public_key_pem
         self.Keys = keypair
         self.height = height
+
     def new(self):
         # public_key_pem: export
         self.public_key_pem = self.Keys.public_key_pem()
@@ -27,6 +28,7 @@ class Transfer():
         cypher = PKCS1_v1_5.new(self.Keys.private_key())
         signature = cypher.sign(_hash)
         self.signature = base64.b64encode(signature).decode('utf-8')
+
     def finalize(self):
         return {
             'sender': self.sender,
@@ -37,6 +39,7 @@ class Transfer():
             'signature': self.signature,
             'public_key': self.public_key_pem
         }
+
     def add_to_pool(self, height):
         is_empty_pool = False
         if not os.path.exists(RELATIVE_PATH + '/txpool'):

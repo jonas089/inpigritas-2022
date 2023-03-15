@@ -22,6 +22,7 @@ def GetBlockChain():
     b = Blockchain()
     b.update()
     return b.chain[index:]
+
 @api.route('/read/txpool', methods=['GET'])
 def GetTxPool():
     height = StatusHeight()
@@ -32,10 +33,12 @@ def GetTxPool():
             return pickle.load(pool_file)
         except Exception as Empty:
             return []
+
 # Consensus post
 @api.route('/propose/tx', methods=['POST'])
 def ProposeTx():
     tx = request.form.get('tx')
+    
 
 # Chain info
 @api.route('/status/height', methods=['GET'])

@@ -4,11 +4,11 @@ from core.accounts import Keys
 import time, os
 from chainspec import BLOCKTIME
 from tqdm import tqdm
-import argparse
+#import argparse
 
-parser = argparse.ArgumentParser(description='AMPS')
-parser.add_argument('amount')
-args = parser.parse_args()
+#parser = argparse.ArgumentParser(description='AMPS')
+#parser.add_argument('amount')
+#args = parser.parse_args()
 # TBD: remove this function from api.py and move it in a helper file.
 def tx_chain_info():
     b = Blockchain()
@@ -17,8 +17,11 @@ def tx_chain_info():
     l = b.height()
     return (h, l)
 
+
+print("Running the tx-tests.")
 test_nonce = 0
-n = int(args.amount)
+#n = int(args.amount)
+n = 10
 progress_bar = tqdm(total=n)
 progress_bar.set_description("Creating Transfers locally: ")
 for i in range(0, n):

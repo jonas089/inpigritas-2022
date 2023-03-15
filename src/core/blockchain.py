@@ -7,6 +7,7 @@ class Blockchain():
     def __init__(self):
         self.chain = []
         self.update()
+
     # Storage
     def new(self):
         if not os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
@@ -14,22 +15,27 @@ class Blockchain():
         else:
             os.remove(RELATIVE_PATH + '/data/blockchain.dat')
             open(RELATIVE_PATH + '/data/blockchain.dat', 'x')
+
     def update(self):
         try:
             with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
                 self.chain = pickle.load(chain_file)
         except Exception as empty:
             self.chain = []
+
     def read(self):
         with open(RELATIVE_PATH + '/data/blockchain.dat', 'rb') as chain_file:
             return pickle.load(chain_file)
+
     def write(self):
         with open(RELATIVE_PATH + '/data/blockchain.dat', 'wb') as chain_file:
             pickle.dump(self.chain, chain_file)
         self.update()
+
     def teardown(self):
         if os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
             os.remove(RELATIVE_PATH + '/data/blockchain.dat')
+
     # Storage - Blocks
     def add_finalized_block(self, Block):
         # Read txpool for current Block and append transactions
@@ -42,12 +48,13 @@ class Blockchain():
                 os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
         self.chain.append(Block)
         self.write()
+
     def add_external_finalized_block(self, Block):
         self.chain.append(Block)
         self.write()
         if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
             os.remove(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index']))
-    # Validity / Integrity
+
     def validate(self, _Block, allow_future_blocks):
         # Block can not be in the future
         if _Block.timestamp > time.time() and allow_future_blocks == False:
@@ -65,19 +72,24 @@ class Blockchain():
             return False
         # validate Transfers in Block using Transfer class
         return True
+
     # Info
     def height(self):
         return len(self.chain) + 1
+
     def next_block_timestamp(self):
         return self.chain[-1]['next_timestamp']
+
     def last_block_timestamp(self):
         return self.chain[-1]['timestamp']
+
     def create_next_block(self):
         prev_Block_Dict = self.chain[-1]
         prev_Block = Block(prev_Block_Dict['index'], prev_Block_Dict['timestamp'], prev_Block_Dict['next_timestamp'], prev_Block_Dict['block_hash'], prev_Block_Dict['next_hash'], prev_Block_Dict['prev_hash'], prev_Block_Dict['transfers'])
         next_Block = Block(None, None, None, None, None, None, [])
         next_Block.new(prev_Block)
         self.add_finalized_block(next_Block.finalize())
+
 
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):
@@ -88,6 +100,7 @@ class Block():
         self.next_hash = next_hash
         self.prev_hash = prev_hash
         self.transfers = transfers
+
     def new(self, prev_Block):
         if prev_Block == None:
             self.index = 0
@@ -115,6 +128,7 @@ class Block():
         next_block_hash = hashlib.sha384()
         next_block_hash.update('{index}{prev_hash}{timestamp}'.format(index=self.index+1, prev_hash=self.hash, timestamp=self.next_timestamp).encode('utf-8'))
         self.next_hash = str(next_block_hash.hexdigest())
+
     def add_finalized_transfer(sender, recipient, amount, timestamp, public_key_pem, transaction_hash, signature):
         self.transfers.append(
             {
@@ -127,6 +141,7 @@ class Block():
                 'signature': signature
             }
         )
+
     def finalize(self):
         return {
             'index':self.index,
@@ -137,6 +152,7 @@ class Block():
             'prev_hash':self.prev_hash,
             'transfers':self.transfers
         }
+
 
 def tests():
     ''' Create empty Blocks
