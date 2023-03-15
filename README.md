@@ -29,8 +29,10 @@ Balance/ Accounting logic is yet to be implemented. As of now, all Transactions 
 ## API
 Nodes communicate by calling endpoints of each others API instance. \
 The API backend is programmed in Python-Flask. \
-Synchronization and API are spun up through the multiprocessing python library. ( see run.py )
+Synchronization and API are spun up through the multiprocessing python library. ( see run.py ) \
+See below the blockchain API endpoint as an example:
 ![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/flask.png)
+
 ## Genesis
 Genesis Block is not included in validation process. \
 Every node needs a copy of the genesis block to be able to sync with the network. \
@@ -45,7 +47,7 @@ Also, potential Layer 2 ZK Rollup using Halo2 or Circom. \
 Networking: Replace Flask with Sockets and build a Flask API on top.
 
 ## Implementation
-Inpigritas is a blockchain that can validate transfers and actions from a Genesis Block onwards. \
+Inpigritas is a blockchain transaction system that can validate actions from a Genesis Block onwards. \
 Every trusted peer needs to hold a copy of the Genesis Block on startup. \
 If a majority (n) of peers is hacked, the network is corrupt. \
 Example: n = 2/3 of total nodes operating. \
