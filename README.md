@@ -4,11 +4,6 @@ Improved version of Inpigritas-2020 ( see below ) \
 Whilst developing core functionality, all data will be stored / read using pickle \
 Database solution tbd.
 
-## Run a local test-net
-
-To run a local Inpigritas network simply run docker-compose up. If you make any changes to the source code simply run \
-`docker build -t inpigritas:latest .` 
-
 ## Milestones
 **07.02.2022**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally \
 **08.02.2022**: Introduction of "ictl" command line tool. Successfully synchronized 2900 Transactions in a single block.
