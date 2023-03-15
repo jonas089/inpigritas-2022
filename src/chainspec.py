@@ -1,5 +1,5 @@
 import os
-BLOCKTIME = os.getenv("INPIG_BLOCKTIME", default=180) # 3 minutes
+BLOCKTIME = os.getenv("INPIG_BLOCKTIME", default=30) # 30 seconds
 ACCOUNT = os.getenv("INPIG_ACCOUNT", default='0x00') # premine address
 PREMINE = os.getenv("INPIG_PREMINE", default='') # premine amount)
 HOST = os.getenv("INPIG_HOST", default='0.0.0.0')
