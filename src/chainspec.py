@@ -2,6 +2,7 @@ import os
 BLOCKTIME = os.getenv("INPIG_BLOCKTIME", default=30) # 30 seconds
 ACCOUNT = os.getenv("INPIG_ACCOUNT", default='0x00') # premine address
 PREMINE = os.getenv("INPIG_PREMINE", default='') # premine amount)
+CONFIRMATIONS = 3 # 3 block confirmations for every transaction
 HOST = os.getenv("INPIG_HOST", default='0.0.0.0')
 PORT = os.getenv("INPIG_PORT", default=8080)
 CHAIN_SYNC_INTERVAL = os.getenv("INPIG_CHAIN_SYNC_INTERVAL", default=5)

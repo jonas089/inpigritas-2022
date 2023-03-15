@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
-from chainspec import HOST, PORT, RELATIVE_PATH
+from chainspec import HOST, PORT, RELATIVE_PATH, CONFIRMATIONS
 import os, pickle
 from core.blockchain import Blockchain
+from core.transfer import Transfer
 api = Flask(__name__)
 
 import logging
@@ -17,8 +18,8 @@ def InpigritasApi():
 @api.route('/read/blockchain', methods=['GET'])
 def GetBlockChain():
     index = int(request.args.get('height'))
-    b = Blockchain()
-    return b.chain[index:]
+    instance = Blockchain()
+    return instance.chain[index:]
 
 @api.route('/read/txpool', methods=['GET'])
 def GetTxPool():
@@ -34,14 +35,20 @@ def GetTxPool():
 # Consensus post
 @api.route('/propose/tx', methods=['POST'])
 def ProposeTx():
+    instance = Blockchain()
     tx = request.form.get('tx')
+    # missing: validate transaction - check for duplicates & sig.verify
+    # need to find a way to prevent nodes from changing tx height / mature the tx once submitted. 
+    tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
+    tx_obj.add_to_pool(instance.height()+CONFIRMATIONS)
+
 
 
 # Chain info
 @api.route('/status/height', methods=['GET'])
 def StatusHeight():
-    b = Blockchain()
-    return str(b.height())
+    instance = Blockchain()
+    return str(instance.height())
 
 # export
 def main():
