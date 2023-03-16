@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
-from chainspec import HOST, PORT, RELATIVE_PATH, CONFIRMATIONS
-import os, pickle
+from chainspec import HOST, PORT, RELATIVE_PATH, CONFIRMATIONS, TEST_PEERS
+import os, pickle, json
 from core.blockchain import Blockchain
 from core.transfer import Transfer
+from client import is_synced
+
 api = Flask(__name__)
 
 import logging
@@ -36,12 +38,15 @@ def GetTxPool():
 @api.route('/propose/tx', methods=['POST'])
 def ProposeTx():
     instance = Blockchain()
-    tx = request.form.get('tx')
-    # missing: validate transaction - check for duplicates & sig.verify
-    # need to find a way to prevent nodes from changing tx height / mature the tx once submitted. 
+    if not is_synced(instance, TEST_PEERS):
+        return "[Error] tx: Node needs to sync first!"
+    # Warning: currently only checking for duplicates in current pool
+    tx = request.json
+    if instance.is_duplicate_in_pool(tx):
+        return "[Error] tx: Transaction is a duplicate!"
     tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
     tx_obj.add_to_pool(instance.height()+CONFIRMATIONS)
-
+    return "[Success] tx: accepted!"
 
 
 # Chain info

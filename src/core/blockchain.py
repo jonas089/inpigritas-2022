@@ -90,6 +90,20 @@ class Blockchain():
         next_Block.new(prev_Block)
         self.add_finalized_block(next_Block.finalize())
 
+    def txpool(self):
+        if not os.path.exists(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=self.height())):
+            return []
+        else:
+            with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=self.height()), 'rb') as pool_file:
+                return pickle.load(pool_file)
+
+    def is_duplicate_in_pool(self, tx):
+        local_pool = self.txpool()
+        if len(local_pool) != 0:
+            for _tx in local_pool:
+                if tx['transaction_hash'] == _tx['transaction_hash']:
+                    return True
+        return False
 
 class Block():
     def __init__(self, index, timestamp, next_timestamp, block_hash, next_hash, prev_hash, transfers):

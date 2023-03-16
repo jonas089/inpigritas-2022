@@ -1,41 +1,24 @@
-from core.transfer import Transfer
-from core.blockchain import Block, Blockchain
 from core.accounts import Keys
-import time, os
-from chainspec import BLOCKTIME
+from core.transfer import Transfer
 from tqdm import tqdm
-#import argparse
-
-#parser = argparse.ArgumentParser(description='AMPS')
-#parser.add_argument('amount')
-#args = parser.parse_args()
-# TBD: remove this function from api.py and move it in a helper file.
-def tx_chain_info():
-    b = Blockchain()
-    b.update()
-    h = b.chain[-1]
-    l = b.height()
-    return (h, l)
-
-
+import requests
 print("Running the tx-tests.")
 test_nonce = 0
 #n = int(args.amount)
-n = 10
+n = 1
 progress_bar = tqdm(total=n)
 progress_bar.set_description("Creating Transfers locally: ")
 for i in range(0, n):
     _Keys = Keys()
-    info = tx_chain_info()
-    if not time.time() < int(info[0]['next_timestamp']) and not time.time() > int(info[0]['timestamp']):
-        print("[Warning]: wait for chain to sync or block to be created.")
 
-    else:
+    r = 'recipient' + str(test_nonce)
+    tx = Transfer('sender', r, 10, None, None, None, None, 1, _Keys)
+    tx.new()
+    _tx = tx.finalize()
 
-        r = 'recipient' + str(test_nonce)
-        tx = Transfer('sender', r, 10, None, None, None, None, 1, _Keys)
-        tx.new()
-        effective_height = info[1] + 2
-        tx.add_to_pool(effective_height)
+
+    x = requests.post("http://127.0.0.1:8080/propose/tx", json=_tx)
+    print(x.text)
+
     test_nonce += 1
     progress_bar.update(1)
