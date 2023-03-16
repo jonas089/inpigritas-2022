@@ -5,9 +5,9 @@ import requests
 print("Running the tx-tests.")
 test_nonce = 0
 #n = int(args.amount)
-n = 1
+n = 10
 progress_bar = tqdm(total=n)
-progress_bar.set_description("Creating Transfers locally: ")
+progress_bar.set_description("Sending transfer objects to a node... ")
 for i in range(0, n):
     _Keys = Keys()
 

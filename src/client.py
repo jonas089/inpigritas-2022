@@ -71,6 +71,10 @@ def sync_transactions(instance, peers):
     for peer in peers:
         cli = ApiClient(peer['HOST'], peer['PORT'])
         local_pool = instance.txpool()
+        # remove
+        _h = instance.height()
+        print("Pool:{pl}, height:{ht}".format(pl=str(local_pool), ht=str(_h)))
+        # until here
         try:
             peer_height = int(cli.get_height())
             if peer_height == instance.height():
@@ -80,11 +84,13 @@ def sync_transactions(instance, peers):
                         if not instance.is_duplicate_in_pool(tx):
                             instance.update()
                             tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
-                            print("[Info]: Tx valid -> ", _tx.validate(instance))
-                            tx_obj.add_to_pool(instance.height())
+                            print("[Info]: Tx valid -> ", tx_obj.validate(instance))
+                            #tx_obj.add_to_pool(instance.height())
                             print("[Success]: Tx synced!")
+                    elif len(local_pool) == 0 and len(peer_pool) == 0:
+                        print("[Info]: no transaction found.")
                     else:
-                        print("Local pool: {lp} Peer pool: {pp}".format(lp=str(len(local_pool)), pp=str(len(peer_pool))))
+                        print("[Info]: Local pool: {lp} transactions Peer pool: {pp} transactions".format(lp=str(len(local_pool)), pp=str(len(peer_pool))))
         except Exception as connerr:
             print('[Warning]: Connection lost: ', PEER)
             print("[Error]: ", connerr)
@@ -102,6 +108,7 @@ def sync():
                 cli.get_blockchain(instance.height())
                 active += 1
             except Exception as connerror:
+                print(connerror)
                 pass
         if active < n:
             print('[Error]: 0 peers online, trying again in 60 seconds!')
