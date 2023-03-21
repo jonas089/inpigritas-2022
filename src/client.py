@@ -11,7 +11,6 @@ from core.transfer import Transfer
 
 '''
 
-
 # This is to be moved
 class ApiClient:
     def __init__(self, host, port):

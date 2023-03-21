@@ -1,26 +1,34 @@
 version: "3.9"
 services:
   inpigritas-node-1:
-    container_name: inpigiritas-node-1
+    container_name: inpigritas-1
     image: inpigritas:latest
     restart: always
     user: "1000:1000"
     environment:
-      - INPIG_PEER_HOST=inpigritas-node-2
+      - INPIG_PEER_HOST=inpigritas-2
+      - INPIG_PEER_PORT=8081
+      - INPIG_HOST=inpigritas-1
+      - INPIG_PORT=8080
     networks:
       - local
     ports:
       - "8080:8080"
 
   inpigritas-node-2:
-    container_name: inpigiritas-node-2
+    container_name: inpigritas-2
     image: inpigritas:latest
     restart: always
     user: "1000:1000"
     environment:
-      - INPIG_PEER_HOST=inpigritas-node-1
+      - INPIG_PEER_HOST=inpigritas-1
+      - INPIG_PEER_PORT=8080
+      - INPIG_HOST=inpigritas-2
+      - INPIG_PORT=8081
     networks:
       - local
+    ports:
+      - "8081:8081"
 
 networks:
   local:
