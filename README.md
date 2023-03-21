@@ -1,19 +1,19 @@
 # Inpigritas 2022 [Roadmap](https://github.com/jonas089/Inpigritas-2022/blob/master/ROADMAP.md)
 Experimental python blockchain project. \
-Improved version of Inpigritas-2020 ( see below ) \
-Whilst developing core functionality, all data will be stored / read using pickle \
-Database solution tbd.
+Improved version of Inpigritas-2020 ( see at the bottom of this file ) \
 
 ## Milestones
 **07.02.2023**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally \
 **08.02.2023**: Introduction of "ictl" command line tool. Successfully synchronized 2900 Transactions in a single block. \
-**16.03.2023**: Merged docker 
+**16.03.2023**: Merged docker
 
-## Run a local test-net 
+## Run a local test-net
 by [Carl Romedius](https://github.com/Rom3dius/)
 
 To run a local Inpigritas network simply run docker-compose up. If you make any changes to the source code simply run \
 `docker build -t inpigritas:latest .`
+`docker compose up`
+
 ![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker.png)
 
 ## Core containts
