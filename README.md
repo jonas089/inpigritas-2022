@@ -61,6 +61,14 @@ Thanks to RSA signatures and Block creation/validation logic it can potentially 
 It is possible to track and prove an assets origin using Inpigritas or a variation of it. \
 Use is at own Risk and this is not a production Blockchain!
 
+## Screenshots
+### Docker (Desktop) on MacOS
+![cmd](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker.png)
+![docker overview](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker-1.png)
+![node details](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker-2.png)
+### Tests
+![transactions](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/tx-sync.png)
+
 ## History
 I've been working on Inpigritas for years. The initial version was unmaintainable so I decided to create a new repo and re-factor the initial
 [Prototype](https://github.com/jonas089/Inpigritas-2020-deprecated)
