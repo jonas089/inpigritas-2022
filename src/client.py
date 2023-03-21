@@ -79,7 +79,7 @@ def sync_transactions(instance, peers):
             if peer_height == instance.height():
                 peer_pool = cli.get_pool()
                 for tx in peer_pool:
-                    if len(local_pool) != 0 and len(peer_pool) > len(local_pool):
+                    if len(peer_pool) > len(local_pool):
                         if not instance.is_duplicate_in_pool(tx):
                             instance.update()
                             tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
