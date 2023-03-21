@@ -11,12 +11,11 @@ Improved version of Inpigritas-2020 ( see at the bottom of this file ) \
 by [Carl Romedius](https://github.com/Rom3dius/)
 
 To run a local Inpigritas network simply run docker-compose up. If you make any changes to the source code simply run \
-`docker build -t inpigritas:latest .`
-`docker compose up`
-
-![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker.png)
-
-## Core containts
+```bash
+docker build -t inpigritas:latest .
+docker compose up
+```
+## Core features
 1. Transfer class
 2. Key-manager class
 3. Blockchain and Block classes
