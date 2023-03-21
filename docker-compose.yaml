@@ -6,7 +6,7 @@ services:
     restart: always
     user: "1000:1000"
     environment:
-      - INPIG_PEER_HOST=172.17.0.2
+      - INPIG_PEER_HOST=inpigritas-node-2
     networks:
       - local
     ports:
@@ -18,7 +18,7 @@ services:
     restart: always
     user: "1000:1000"
     environment:
-      - INPIG_PEER_HOST=172.17.0.2
+      - INPIG_PEER_HOST=inpigritas-node-1
     networks:
       - local
 
