@@ -52,7 +52,7 @@ def sync_blocks(instance, peers):
                         tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
                         if tx_obj.validate(c) == False:
                             print('[Error]: Invalid transaction found in Block => Peer skipped: ', peer)
-                            time.sleep(600)
+                            time.sleep(60)
                                             #False: don't allow blocks that are in the future.
                     if instance.validate(b, False) == True:
                         print('[Info]: Block valid')
@@ -70,26 +70,23 @@ def sync_transactions(instance, peers):
     for peer in peers:
         cli = ApiClient(peer['HOST'], peer['PORT'])
         local_pool = instance.txpool()
-        # remove
-        _h = instance.height()
-        print("Pool:{pl}, height:{ht}".format(pl=str(local_pool), ht=str(_h)))
-        # until here
         try:
             peer_height = int(cli.get_height())
             if peer_height == instance.height():
                 peer_pool = cli.get_pool()
-                for tx in peer_pool:
-                    if len(peer_pool) > len(local_pool):
+                if len(peer_pool) > len(local_pool):
+                    for tx in peer_pool:
                         if not instance.is_duplicate_in_pool(tx):
                             instance.update()
                             tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
-                            print("[Info]: Tx valid -> ", tx_obj.validate(instance))
-                            #tx_obj.add_to_pool(instance.height())
-                            print("[Success]: Tx synced!")
-                    elif len(local_pool) == 0 and len(peer_pool) == 0:
-                        print("[Info]: no transaction found.")
-                    else:
-                        print("[Info]: Local pool: {lp} transactions Peer pool: {pp} transactions".format(lp=str(len(local_pool)), pp=str(len(peer_pool))))
+                            tx_obj.add_to_pool(instance.height())
+                            #print("[Info]: Tx valid -> ", tx_obj.validate(instance))
+                            #print("[Success]: Tx synced!")
+                elif len(local_pool) == 0 and len(peer_pool) == 0:
+                    print("[Info]: no transaction found.")
+                else:
+                    print("[Success]: Tx sync complete!")
+                    print("[Info]: Local pool length: {llp}, Peer pool lengt: {ppl}".format(llp=str(len(local_pool)), ppl=str(len(peer_pool))))
         except Exception as connerr:
             print('[Warning]: Connection lost: ', PEER)
             print("[Error]: ", connerr)
