@@ -70,5 +70,5 @@ Use is at own Risk and this is not a production Blockchain!
 ![transactions](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/tx-sync.png)
 
 ## History
-I've been working on Inpigritas for years. The initial version was unmaintainable so I decided to create a new repo and re-factor the initial
+The initial version was unmaintainable so I decided to create a new repo and re-factor the initial
 [Prototype](https://github.com/jonas089/Inpigritas-2020-deprecated)
