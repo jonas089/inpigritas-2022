@@ -1,6 +1,9 @@
 from core.transfer import Transfer
 from cli.lib import ApiClient
 
+'''
+    * prototype sync function for transactions in current pool
+'''
 def sync_proto(instance, peers):
     for peer in peers:
         cli = ApiClient(peer['HOST'], peer['PORT'])

@@ -23,12 +23,18 @@ def sync_transactions(instance, peers):
 def is_synced(instance, peers):
     return is_sync_proto(instance, peers)
 
-# Synchronization loop and Consensus
+'''Network synchronisation loop
+    * check amount of active peers
+    * at least one peer must be active
+'''
 def sync():
     start_time = time.time()
     instance = Blockchain()
     while True:
-        # Look for active peers - temporary solution
+        '''
+            * check amount of active peers
+            * at least one peer must be active
+        '''
         n = 1
         active = 0
         for peer in TEST_PEERS:
@@ -43,17 +49,24 @@ def sync():
             print('[Error]: 0 peers online, trying again in 60 seconds!')
             time.sleep(60)
             continue
-        #################################################################
 
-        # Sync Blocks with active peers ( subject to a majority threshold )
+        '''
+            * sync blocks
+            * sync transactions in the currently selected pool
+        '''
         sync_blocks(instance, TEST_PEERS)
         sync_transactions(instance, TEST_PEERS)
         print('[Info]: Sync Done! @', str(time.time()))
-        # Create a new Block
-        if instance.next_block_timestamp() <= time.time():
+        '''
+            * create a new block if fully synced
+            * small blocktime can cause disorder in prototype
+        '''
+        if is_synced() and instance.next_block_timestamp() <= time.time():
             instance.create_next_block()
             print('[Success]: Block created -> ', str(instance.height() - 1))
 
-        # Await next sync period
+        '''
+            * await the next synchronization round and repeat
+        '''
         print('Runtime: ', str(time.time() - start_time)[:-5])
         time.sleep(CHAIN_SYNC_INTERVAL)

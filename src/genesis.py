@@ -2,6 +2,11 @@ from core.blockchain import Block, Blockchain
 import os
 from chainspec import RELATIVE_PATH
 
+'''
+    * Manual teardown (could instead use Blockchain.teardown method in the future)
+    * Purge blockchain file and create new genesis block
+'''
+
 def reset():
     path = RELATIVE_PATH + '/data'
     print("Deleting Chain...")

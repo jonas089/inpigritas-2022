@@ -5,7 +5,14 @@ from Crypto.Hash import SHA384
 from core.accounts import Keys
 from core.blockchain import Blockchain
 from chainspec import RELATIVE_PATH
+
+'''
+    * Transfer object used to construct and dispatch a transaction
+'''
 class Transfer():
+    '''
+        * Init function can be used to construct and already signed transfer
+    '''
     def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem, height, keypair):
         self.sender = sender
         self.recipient = recipient
@@ -17,6 +24,9 @@ class Transfer():
         self.Keys = keypair
         self.height = height
 
+    '''
+        * Sign an unsigned transfer (necessary when creating a new transaction)
+    '''
     def new(self):
         # public_key_pem: export
         self.public_key_pem = self.Keys.public_key_pem()
@@ -29,6 +39,9 @@ class Transfer():
         signature = cypher.sign(_hash)
         self.signature = base64.b64encode(signature).decode('utf-8')
 
+    '''
+        * Format the transfer object as json
+    '''
     def finalize(self):
         return {
             'sender': self.sender,
@@ -40,6 +53,10 @@ class Transfer():
             'public_key': self.public_key_pem
         }
 
+    '''
+        * Add the transfer to the local pool
+        * This happens after a transfer was submitted to the http server and accepted by this node
+    '''
     def add_to_pool(self, height):
         is_empty_pool = False
         if not os.path.exists(RELATIVE_PATH + '/txpool'):
@@ -58,6 +75,10 @@ class Transfer():
         with open(RELATIVE_PATH + '/txpool/{height}.dat'.format(height=height), 'wb') as pool_file:
             pickle.dump(pool, pool_file)
 
+    '''
+        * Validate a transfer object
+        * Verify RSA signature
+    '''
     def validate(self, instance):
         # perform balance checks locally
         '''

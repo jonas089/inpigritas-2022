@@ -5,6 +5,9 @@ sys.path.insert(0, module_path)
 from core.blockchain import Block
 from cli.lib import ApiClient
 
+'''
+    * prototype sync function for blocks
+'''
 def sync_proto(instance, peers):
     for peer in peers:
         cli = ApiClient(peer['HOST'], peer['PORT'])
