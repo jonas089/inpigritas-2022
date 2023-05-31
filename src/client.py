@@ -14,6 +14,18 @@ from cli.lib import ApiClient
 
 '''
 
+def connect(peers, n=1):
+    active = 0
+    for peer in peers:
+        try:
+            cli = ApiClient(peer['HOST'], peer['PORT'])
+            cli.get_height()
+            active += 1
+        except Exception as connerror:
+            print(connerror)
+            pass
+    return active
+
 def sync_blocks(instance, peers):
     blk_sync_proto(instance, peers)
 
@@ -22,6 +34,11 @@ def sync_transactions(instance, peers):
 
 def is_synced(instance, peers):
     return is_sync_proto(instance, peers)
+
+def new_block(instance):
+    if is_synced() and instance.next_block_timestamp() <= time.time():
+        instance.create_next_block()
+        print('[Success]: Block created -> ', str(instance.height() - 1))
 
 '''Network synchronisation loop
     * check amount of active peers
@@ -35,21 +52,11 @@ def sync():
             * check amount of active peers
             * at least one peer must be active
         '''
-        n = 1
-        active = 0
-        for peer in TEST_PEERS:
-            try:
-                cli = ApiClient(peer['HOST'], peer['PORT'])
-                cli.get_blockchain(instance.height())
-                active += 1
-            except Exception as connerror:
-                print(connerror)
-                pass
+        active = connect(TEST_PEERS)
         if active < n:
             print('[Error]: 0 peers online, trying again in 60 seconds!')
             time.sleep(60)
             continue
-
         '''
             * sync blocks
             * sync transactions in the currently selected pool
@@ -61,9 +68,7 @@ def sync():
             * create a new block if fully synced
             * small blocktime can cause disorder in prototype
         '''
-        if is_synced() and instance.next_block_timestamp() <= time.time():
-            instance.create_next_block()
-            print('[Success]: Block created -> ', str(instance.height() - 1))
+        new_block(instance)
 
         '''
             * await the next synchronization round and repeat
