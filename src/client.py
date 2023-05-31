@@ -4,91 +4,25 @@ import os, pickle
 from chainspec import HOST, PORT, CHAIN_SYNC_INTERVAL, TEST_PEERS, RELATIVE_PATH
 from core.blockchain import Blockchain, Block
 from core.transfer import Transfer
-
+from sync.blk import sync_proto as blk_sync_proto
+from sync.tx import sync_proto as tx_sync_proto
+from sync.lib import is_synced as is_sync_proto
+from cli.lib import ApiClient
 '''
     TBD: introduce error types
     split sync_blocks and sync_transactions up in specialized functions
 
 '''
 
-class ApiClient:
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
-    def get_blockchain(self, height):
-        blockchain = requests.get('http://{host}:{port}/read/blockchain?height={height}'.format(host=self.host, port=self.port, height=height))
-        return json.loads(blockchain.text)
-    def get_pool(self):
-        pool = requests.get('http://{host}:{port}/read/txpool'.format(host=self.host, port=self.port))
-        return json.loads(pool.text)
-    def get_height(self):
-        height = requests.get('http://{host}:{port}/status/height'.format(host=self.host, port=self.port))
-        return height.text
-
-def is_synced(instance, peers):
-    for peer in peers:
-        cli = ApiClient(peer['HOST'], peer['PORT'])
-        try:
-            peer_height = int(cli.get_height())
-            if peer_height > instance.height():
-                return False
-        except Exception as connerr:
-            print(connerr)
-            print('[Warning]: Connection lost: ', peer)
-    return True
-
 def sync_blocks(instance, peers):
-    for peer in peers:
-        cli = ApiClient(peer['HOST'], peer['PORT'])
-        try:
-            peer_height = int(cli.get_height())
-            if peer_height > instance.height():
-                peer_chain = cli.get_blockchain(instance.height())
-                for block in peer_chain:
-                    b = Block(block['index'], block['timestamp'], block['next_timestamp'], block['block_hash'], block['next_hash'], block['prev_hash'], block['transfers'])
-                    for tx in b.transfers:
-                        instance.update()
-                        tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
-                        if tx_obj.validate(c) == False:
-                            print('[Error]: Invalid transaction found in Block => Peer skipped: ', peer)
-                            time.sleep(60)
-                                            #False: don't allow blocks that are in the future.
-                    if instance.validate(b, False) == True:
-                        print('[Info]: Block valid')
-                        instance.add_external_finalized_block(b.finalize())
-                    else:
-                        print('[Error]: Block did not pass validaton => Peer skipped: ', peer)
-                        continue
-            else:
-                print('[Info]: Nothing to sync')
-        except Exception as connerr:
-            print(connerr)
-            print('[Warning]: Connection lost: ', peer)
+    blk_sync_proto(instance, peers)
 
 def sync_transactions(instance, peers):
-    for peer in peers:
-        cli = ApiClient(peer['HOST'], peer['PORT'])
-        local_pool = instance.txpool()
-        try:
-            peer_height = int(cli.get_height())
-            if peer_height == instance.height():
-                peer_pool = cli.get_pool()
-                if len(peer_pool) > len(local_pool):
-                    for tx in peer_pool:
-                        if not instance.is_duplicate_in_pool(tx):
-                            instance.update()
-                            tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
-                            tx_obj.add_to_pool(instance.height())
-                            #print("[Info]: Tx valid -> ", tx_obj.validate(instance))
-                            #print("[Success]: Tx synced!")
-                elif len(local_pool) == 0 and len(peer_pool) == 0:
-                    print("[Info]: no transaction found.")
-                else:
-                    print("[Success]: Tx sync complete!")
-                    print("[Info]: Local pool length: {llp}, Peer pool lengt: {ppl}".format(llp=str(len(local_pool)), ppl=str(len(peer_pool))))
-        except Exception as connerr:
-            print('[Warning]: Connection lost: ', PEER)
-            print("[Error]: ", connerr)
+    tx_sync_proto(instance, peers)
+
+def is_synced(instance, peers):
+    return is_sync_proto(instance, peers)
+
 # Synchronization loop and Consensus
 def sync():
     start_time = time.time()
