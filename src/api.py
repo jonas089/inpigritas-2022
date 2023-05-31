@@ -7,6 +7,13 @@ from client import is_synced
 
 api = Flask(__name__)
 
+'''
+TBD:
+    1. SQL database & scalable data model
+    2. Duplicate check & balances
+
+'''
+
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)

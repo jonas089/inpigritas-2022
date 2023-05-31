@@ -1,7 +1,12 @@
+import sys
+import os
+module_path = os.path.abspath('../src')
+sys.path.insert(0, module_path)
 from core.accounts import Keys
 from core.transfer import Transfer
 from tqdm import tqdm
 import requests
+
 print("Running the tx-tests.")
 test_nonce = 0
 #n = int(args.amount)

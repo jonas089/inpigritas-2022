@@ -8,7 +8,6 @@ class Blockchain():
         self.chain = []
         self.update()
 
-    # Storage
     def new(self):
         if not os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
             open(RELATIVE_PATH + '/data/blockchain.dat', 'x')
@@ -36,7 +35,6 @@ class Blockchain():
         if os.path.exists(RELATIVE_PATH + '/data/blockchain.dat'):
             os.remove(RELATIVE_PATH + '/data/blockchain.dat')
 
-    # Storage - Blocks
     def add_finalized_block(self, Block):
         # Read txpool for current Block and append transactions
         if os.path.exists(RELATIVE_PATH + '/txpool/{index}.dat'.format(index=Block['index'])):
@@ -73,7 +71,6 @@ class Blockchain():
         # validate Transfers in Block using Transfer class
         return True
 
-    # Info
     def height(self):
         return len(self.chain) + 1
 
@@ -143,6 +140,18 @@ class Block():
         next_block_hash.update('{index}{prev_hash}{timestamp}'.format(index=self.index+1, prev_hash=self.hash, timestamp=self.next_timestamp).encode('utf-8'))
         self.next_hash = str(next_block_hash.hexdigest())
 
+    def finalize(self):
+        return {
+            'index':self.index,
+            'timestamp':self.timestamp,
+            'next_timestamp':self.next_timestamp,
+            'block_hash':self.hash,
+            'next_hash':self.next_hash,
+            'prev_hash':self.prev_hash,
+            'transfers':self.transfers
+        }
+
+
     def add_finalized_transfer(sender, recipient, amount, timestamp, public_key_pem, transaction_hash, signature):
         self.transfers.append(
             {
@@ -155,18 +164,6 @@ class Block():
                 'signature': signature
             }
         )
-
-    def finalize(self):
-        return {
-            'index':self.index,
-            'timestamp':self.timestamp,
-            'next_timestamp':self.next_timestamp,
-            'block_hash':self.hash,
-            'next_hash':self.next_hash,
-            'prev_hash':self.prev_hash,
-            'transfers':self.transfers
-        }
-
 
 def tests():
     ''' Create empty Blocks
