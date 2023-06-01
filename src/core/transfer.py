@@ -7,11 +7,32 @@ from core.blockchain import Blockchain
 from chainspec import RELATIVE_PATH
 
 '''
-    * Transfer object used to construct and dispatch a transaction
+    Transfer object used to construct and dispatch a transaction
 '''
 class Transfer():
+
     '''
-        * Init function can be used to construct and already signed transfer
+        Initialise a new Transfer
+        :param: sender
+        :type sender: str
+        :param: recipient
+        :type recipient: str
+        :param: amount
+        :type amount: float
+        :param: timestamp
+        :type timestamp: str
+        :param: tx_hash
+        :type tx_hash: str
+        :param: signature
+        :type signature: RSA signature
+        :param: public_key_pem
+        :type public_key_pem: str
+        :param: height
+        :type height: int
+        :param: keypair
+        :type keypair: RSA keypair
+        :return: ()
+        :rtype: ()
     '''
     def __init__(self, sender, recipient, amount, timestamp, tx_hash, signature, public_key_pem, height, keypair):
         self.sender = sender
@@ -25,7 +46,9 @@ class Transfer():
         self.height = height
 
     '''
-        * Sign an unsigned transfer (necessary when creating a new transaction)
+        Create a new Transfer with signature
+        :return: ()
+        :rtype: ()
     '''
     def new(self):
         # public_key_pem: export
@@ -40,7 +63,9 @@ class Transfer():
         self.signature = base64.b64encode(signature).decode('utf-8')
 
     '''
-        * Format the transfer object as json
+        Represent the Transfer as json
+        :return: ()
+        :rtype: ()
     '''
     def finalize(self):
         return {
@@ -54,8 +79,11 @@ class Transfer():
         }
 
     '''
-        * Add the transfer to the local pool
-        * This happens after a transfer was submitted to the http server and accepted by this node
+        Add the Transfer to the selected transaction pool
+        :param: height
+        :type height: int
+        :return: ()
+        :rtype: ()
     '''
     def add_to_pool(self, height):
         is_empty_pool = False
@@ -76,8 +104,11 @@ class Transfer():
             pickle.dump(pool, pool_file)
 
     '''
-        * Validate a transfer object
-        * Verify RSA signature
+        Validate a Transfer and it's signature
+        :param: instance
+        :type instance: Blockchain
+        :return: Validation result
+        :rtype: bool
     '''
     def validate(self, instance):
         # perform balance checks locally

@@ -8,28 +8,48 @@ from client import is_synced
 api = Flask(__name__)
 
 '''
-TBD:
-    1. SQL database & scalable data model
-    2. Duplicate check & balances
-
+    Inpigritas HTTP server
 '''
 
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-# Web
+'''
+    Home route
+    :return: "Inpigritas"
+    :rtype: str
+'''
 @api.route('/', methods=['GET'])
 def InpigritasApi():
     return "Inpigritas"
 
-# Consensus data
+'''
+    Height GET
+    :return: height
+    :rtype: str
+'''
+@api.route('/status/height', methods=['GET'])
+def StatusHeight():
+    instance = Blockchain()
+    return str(instance.height())
+
+'''
+    Blockchain GET
+    :return: Blockchain
+    :rtype: json
+'''
 @api.route('/read/blockchain', methods=['GET'])
 def GetBlockChain():
     index = int(request.args.get('height'))
     instance = Blockchain()
     return instance.chain[index:]
 
+'''
+    Txpool GET
+    :return: TxPool
+    :rtype: json
+'''
 @api.route('/read/txpool', methods=['GET'])
 def GetTxPool():
     height = StatusHeight()
@@ -41,7 +61,11 @@ def GetTxPool():
         except Exception as Empty:
             return []
 
-# Consensus post
+'''
+    Transaction POST
+    :return: Result
+    :rtype: str
+'''
 @api.route('/propose/tx', methods=['POST'])
 def ProposeTx():
     instance = Blockchain()
@@ -55,12 +79,6 @@ def ProposeTx():
     tx_obj.add_to_pool(instance.height()+CONFIRMATIONS)
     return "[Success] tx: accepted!"
 
-
-# Chain info
-@api.route('/status/height', methods=['GET'])
-def StatusHeight():
-    instance = Blockchain()
-    return str(instance.height())
 
 # export
 def main():

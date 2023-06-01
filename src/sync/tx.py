@@ -2,7 +2,13 @@ from core.transfer import Transfer
 from cli.lib import ApiClient
 
 '''
-    * prototype sync function for transactions in current pool
+    Sync transaction pool for current block with a list of peers
+    :param: instance
+    :type instance: Blockchain
+    :param: peers
+    :type instance: str[]
+    :return: ()
+    :rtype: ()
 '''
 def sync_proto(instance, peers):
     for peer in peers:

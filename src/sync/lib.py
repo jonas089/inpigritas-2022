@@ -5,9 +5,14 @@ sys.path.insert(0, module_path)
 from cli.lib import ApiClient
 
 '''
-    * check if synchronised or behind peer(s)
+    Sync transaction pool for current block with a list of peers
+    :param: instance
+    :type instance: Blockchain
+    :param: peers
+    :type instance: str[]
+    :return: ()
+    :rtype: ()
 '''
-
 def is_synced(instance, peers):
     for peer in peers:
         cli = ApiClient(peer['HOST'], peer['PORT'])

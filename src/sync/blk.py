@@ -6,7 +6,13 @@ from core.blockchain import Block
 from cli.lib import ApiClient
 
 '''
-    * prototype sync function for blocks
+    Sync blocks with a list of peers
+    :param: instance
+    :type instance: Blockchain
+    :param: peers
+    :type instance: str[]
+    :return: ()
+    :rtype: ()
 '''
 def sync_proto(instance, peers):
     for peer in peers:

@@ -8,13 +8,14 @@ from sync.blk import sync_proto as blk_sync_proto
 from sync.tx import sync_proto as tx_sync_proto
 from sync.lib import is_synced as is_sync_proto
 from cli.lib import ApiClient
-'''
-    TBD: introduce error types
-    split sync_blocks and sync_transactions up in specialized functions
 
 '''
+    Inpigritas node client
+    :param: peers
+    :type peers: str[]
+'''
 
-def connect(peers, n=1):
+def connect(peers):
     active = 0
     for peer in peers:
         try:
@@ -26,52 +27,63 @@ def connect(peers, n=1):
             pass
     return active
 
+'''
+    Sync Blocks call
+    :param: instance
+    :type instance: Blockchain
+'''
 def sync_blocks(instance, peers):
     blk_sync_proto(instance, peers)
 
+'''
+    Sync Transactions call
+    :param: instance
+    :type instance: Blockchain
+'''
 def sync_transactions(instance, peers):
     tx_sync_proto(instance, peers)
 
+'''
+    Check if synced with peers
+    :param: instance
+    :type instance: Blockchain
+    :param: peers
+    :type peers: str[]
+    :return: Result
+    :rtype: bool
+'''
 def is_synced(instance, peers):
     return is_sync_proto(instance, peers)
 
+'''
+    Create new block event
+    :param: instance
+    :type instance: Blockchain
+'''
 def new_block(instance):
-    if is_synced() and instance.next_block_timestamp() <= time.time():
+    if is_synced(instance, TEST_PEERS) and instance.next_block_timestamp() <= time.time():
         instance.create_next_block()
         print('[Success]: Block created -> ', str(instance.height() - 1))
 
-'''Network synchronisation loop
-    * check amount of active peers
-    * at least one peer must be active
+'''
+    Network synchronisation loop
 '''
 def sync():
     start_time = time.time()
     instance = Blockchain()
     while True:
-        '''
-            * check amount of active peers
-            * at least one peer must be active
-        '''
         active = connect(TEST_PEERS)
+        n=1
         if active < n:
             print('[Error]: 0 peers online, trying again in 60 seconds!')
             time.sleep(60)
             continue
-        '''
-            * sync blocks
-            * sync transactions in the currently selected pool
-        '''
+
         sync_blocks(instance, TEST_PEERS)
         sync_transactions(instance, TEST_PEERS)
         print('[Info]: Sync Done! @', str(time.time()))
-        '''
-            * create a new block if fully synced
-            * small blocktime can cause disorder in prototype
-        '''
+
         new_block(instance)
 
-        '''
-            * await the next synchronization round and repeat
-        '''
         print('Runtime: ', str(time.time() - start_time)[:-5])
         time.sleep(CHAIN_SYNC_INTERVAL)
