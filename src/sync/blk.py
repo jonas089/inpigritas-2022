@@ -27,7 +27,7 @@ def sync_proto(instance, peers):
                     for tx in b.transfers:
                         instance.update()
                         tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
-                        if tx_obj.validate(c) == False:
+                        if tx_obj.validate(instance) == False:
                             print('[Error]: Invalid transaction found in Block => Peer skipped: ', peer)
                             time.sleep(60)
                                             #False: don't allow blocks that are in the future.

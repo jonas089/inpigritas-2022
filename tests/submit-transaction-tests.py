@@ -10,7 +10,7 @@ import requests
 print("Running the tx-tests.")
 test_nonce = 0
 #n = int(args.amount)
-n = 10
+n = 100000
 progress_bar = tqdm(total=n)
 progress_bar.set_description("Sending transfer objects to a node... ")
 for i in range(0, n):
@@ -23,7 +23,7 @@ for i in range(0, n):
 
 
     x = requests.post("http://127.0.0.1:8080/propose/tx", json=_tx)
-    print(x.text)
+    #print(x.text)
 
     test_nonce += 1
     progress_bar.update(1)
