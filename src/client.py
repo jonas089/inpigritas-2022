@@ -61,10 +61,13 @@ def is_synced(instance, peers):
     :type instance: Blockchain
 '''
 def new_block(instance):
-    if instance.next_block_timestamp() <= time.time():
+    if is_synced(instance, TEST_PEERS) == True and instance.next_block_timestamp() <= time.time():
         instance.create_next_block()
         print('[Success]: Block created -> ', str(instance.height() - 1))
-
+    '''else:
+        sync_blocks(instance, TEST_PEERS)
+        sync_transactions(instance, TEST_PEERS)
+    '''
 '''
     Network synchronisation loop
 '''

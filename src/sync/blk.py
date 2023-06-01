@@ -21,7 +21,7 @@ def sync_proto(instance, peers):
         try:
             peer_height = int(cli.get_height())
             if peer_height > instance.height():
-                peer_chain = cli.get_blockchain(instance.height())
+                peer_chain = cli.get_blockchain(instance.height() - 1)
                 for block in peer_chain:
                     b = Block(block['index'], block['timestamp'], block['next_timestamp'], block['block_hash'], block['next_hash'], block['prev_hash'], block['transfers'])
                     for tx in b.transfers:

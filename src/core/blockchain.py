@@ -115,16 +115,20 @@ class Blockchain():
         # Block can not be in the future
         if block.timestamp > time.time() and allow_future_blocks == False:
             return False
+        print("[DEBUG]: next block index: {} previous block index: {}".format(block.index, self.chain[-1]['index']))
         prev_block_dict = self.chain[block.index - 1]
+
         prev_block = Block(prev_block_dict['index'], prev_block_dict['timestamp'], prev_block_dict['next_timestamp'], prev_block_dict['block_hash'], prev_block_dict['next_hash'], prev_block_dict['prev_hash'], prev_block_dict['transfers'])
         # compare Blocks
         if prev_block.hash != block.prev_hash or prev_block.next_hash != block.hash or prev_block.index != (block.index - 1) or prev_block.next_timestamp != block.timestamp:
+            print("[DEBUG]: ", prev_block.hash != block.prev_hash, prev_block.next_hash != block.hash, prev_block.index != (block.index - 1), prev_block.next_timestamp != block.timestamp)
             return False
         # validate Block hash
         block_hash = hashlib.sha384()
         block_hash.update('{index}{prev_hash}{timestamp}'.format(index=block.index, prev_hash=block.prev_hash, timestamp=block.timestamp).encode('utf-8'))
         _hash = str(block_hash.hexdigest())
         if _hash != block.hash or _hash != prev_block.next_hash:
+            print("[DEBUG]: ", _hash != block.hash, _hash != prev_block.next_hash)
             return False
         # validate Transfers in Block using Transfer class
         return True
@@ -248,10 +252,10 @@ class Block():
                     'sender':'0x00',
                     'recipient':ACCOUNT,
                     'amount':PREMINE,
-                    'timestamp': time.time()
+                    'timestamp': 1685630115.540585
                 }
             )
-            self.timestamp = time.time()
+            self.timestamp = 1685630115.540585
         self.next_timestamp = self.timestamp + BLOCKTIME
         block_hash = hashlib.sha384()
         block_hash.update('{index}{prev_hash}{timestamp}'.format(index=self.index, prev_hash=self.prev_hash, timestamp=self.timestamp).encode('utf-8'))
