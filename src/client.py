@@ -61,7 +61,7 @@ def is_synced(instance, peers):
     :type instance: Blockchain
 '''
 def new_block(instance):
-    if is_synced(instance, TEST_PEERS) and instance.next_block_timestamp() <= time.time():
+    if instance.next_block_timestamp() <= time.time():
         instance.create_next_block()
         print('[Success]: Block created -> ', str(instance.height() - 1))
 

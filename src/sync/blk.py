@@ -41,4 +41,4 @@ def sync_proto(instance, peers):
                 print('[Info]: Nothing to sync')
         except Exception as connerr:
             print('[Warning]: Connection lost: ', peer)
-            print("[Error]: ", connerr)
+            print("[Error in blk]: ", connerr)

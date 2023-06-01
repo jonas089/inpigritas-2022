@@ -22,5 +22,5 @@ def is_synced(instance, peers):
                 return False
         except Exception as connerr:
             print('[Warning]: Connection lost: ', peer)
-            print("[Error]: ", connerr)
+            print("[Error in lib]: ", connerr)
     return True
