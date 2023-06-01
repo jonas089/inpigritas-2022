@@ -4,6 +4,7 @@ module_path = os.path.abspath('../src')
 sys.path.insert(0, module_path)
 from core.blockchain import Block
 from cli.lib import ApiClient
+from core.transfer import Transfer
 
 '''
     Sync blocks with a list of peers
@@ -39,5 +40,5 @@ def sync_proto(instance, peers):
             else:
                 print('[Info]: Nothing to sync')
         except Exception as connerr:
-            print(connerr)
             print('[Warning]: Connection lost: ', peer)
+            print("[Error]: ", connerr)

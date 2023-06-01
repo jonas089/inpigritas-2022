@@ -21,6 +21,6 @@ def is_synced(instance, peers):
             if peer_height > instance.height():
                 return False
         except Exception as connerr:
-            print(connerr)
             print('[Warning]: Connection lost: ', peer)
+            print("[Error]: ", connerr)
     return True

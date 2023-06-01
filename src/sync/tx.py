@@ -32,5 +32,5 @@ def sync_proto(instance, peers):
                     print("[Success]: Tx sync complete!")
                     print("[Info]: Local pool length: {llp}, Peer pool lengt: {ppl}".format(llp=str(len(local_pool)), ppl=str(len(peer_pool))))
         except Exception as connerr:
-            print('[Warning]: Connection lost: ', PEER)
+            print('[Warning]: Connection lost: ', peer)
             print("[Error]: ", connerr)
