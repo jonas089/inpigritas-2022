@@ -30,8 +30,7 @@ def sync_proto(instance, peers):
                         if tx_obj.validate(instance) == False:
                             print('[Error]: Invalid transaction found in Block => Peer skipped: ', peer)
                             time.sleep(60)
-                                            #False: don't allow blocks that are in the future.
-                    if instance.validate(b, False) == True:
+                    if instance.validate(b, False) == True: # (b, False): Don't allow blocks with a timestamp > current_time
                         print('[Info]: Block valid')
                         instance.add_external_finalized_block(b.finalize())
                     else:
