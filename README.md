@@ -1,4 +1,5 @@
-# Side-project Inpigritas 2022 [Roadmap](https://github.com/jonas089/Inpigritas-2022/blob/master/ROADMAP.md)
+# Python Blockchain Transaction network - Portfolio Project by Jonas Pauli
+
 Experimental python blockchain project. \
 Improved version of Inpigritas-2020 ( see at the bottom of this file ) \
 
