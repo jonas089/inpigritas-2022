@@ -24,6 +24,10 @@ def sync_proto(instance, peers):
                             instance.update()
                             tx_obj = Transfer(tx['sender'], tx['recipient'], tx['amount'], tx['timestamp'], tx['transaction_hash'], tx['signature'], tx['public_key'], None, None)
                             tx_obj.add_to_pool(instance.height())
+                            # Warning!
+                            '''
+                            Proto sync is currently missing a check for duplicates outside the current pool!
+                            '''
                             #print("[Info]: Tx valid -> ", tx_obj.validate(instance))
                             #print("[Success]: Tx synced!")
                 elif len(local_pool) == 0 and len(peer_pool) == 0:
