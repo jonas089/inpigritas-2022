@@ -71,9 +71,7 @@ Any integrations or use is/are at own Risk since Inpigritas is not intended to b
 
 ## Screenshots
 ### Docker (Desktop) on MacOS
-![cmd](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker.png)
-![docker overview](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker-1.png)
-![node details](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker-2.png)
+![docker preview](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/docker-1.png)
 ![transactions](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/tx-sync.png)
 
 ## Milestones
