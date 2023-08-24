@@ -42,7 +42,7 @@ Nodes communicate by querying flask API routes.
  
 A Node's synchronization and API processes are spawned simultaneously. (see run.py)
 
-**The flask API enables users to query the entire chain (so long as it fits in device memory)**
+### The flask API enables users to query the entire chain (so long as it fits in device memory)**
 ![Inpigritas API](https://github.com/jonas089/Inpigritas-2022/blob/master/screenshots/flask.png)
 (views blocks from height N onwards).
 
