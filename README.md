@@ -3,13 +3,16 @@
 Experimental python blockchain project. \
 Improved version of Inpigritas-2020 ( see at the bottom of this file ) \
 
+# High-level XMind map 
+![Inpigritas intro](https://github.com/jonas089/Inpigritas-2022/blob/master/high-level-mindmap.png)
+
 ## Milestones
 **07.02.2023**: Successfully synced a Transaction from the Pool ( flask API ) in a 2 node setup hosted locally \
 **08.02.2023**: Introduction of "ictl" command line tool. Successfully synchronized 2900 Transactions in a single block. \
 **16.03.2023**: Merged docker
 
 ## Run a local test-net
-by [Carl Romedius](https://github.com/Rom3dius/)
+credit to [Carl Romedius](https://github.com/Rom3dius/) for helping with the Docker image setup.
 
 To run a local Inpigritas network simply run docker-compose up. If you make any changes to the source code simply run \
 ```bash
