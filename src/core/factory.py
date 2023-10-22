@@ -1,4 +1,5 @@
 from Crypto.Hash import SHA384
+
 class BlockFactory:
     def create_new_block(self, index, prev_hash, transactions, timestamp, next_timestamp):
         # compute next timestamp 

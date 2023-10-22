@@ -1,3 +1,5 @@
+import sqlite3
+
 class Block:
     def __init__(self, index, transactions, timestamp, next_timestamp, hash, next_hash, prev_hash):
         self.index = index
