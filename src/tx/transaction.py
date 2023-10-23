@@ -23,3 +23,6 @@ class Tx:
             tx_serialized["timestamp"],
             tx_serialized["signature"]
         )
+
+    def verify(self):
+        pass

@@ -31,3 +31,6 @@ class Block:
             block_serialized["next_hash"],
             block_serialized["prev_hash"]
         )
+
+    def verify(self):
+        pass
