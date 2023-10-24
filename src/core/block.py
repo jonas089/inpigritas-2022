@@ -1,8 +1,8 @@
 import sqlite3
 
 class Block:
-    def __init__(self, index, transactions, timestamp, next_timestamp, hash, next_hash, prev_hash):
-        self.index = index
+    def __init__(self, height, transactions, timestamp, next_timestamp, hash, next_hash, prev_hash):
+        self.height = height
         self.transactions = transactions
         self.timestamp = timestamp
         self.next_timestamp = next_timestamp
@@ -12,7 +12,8 @@ class Block:
     
     def serialize(self):
         return {
-            "index": self.index,
+            "height": self.height,
+            # transactions need to be serialized seperately
             "transactions": self.transactions,
             "timestamp": self.timestamp,
             "next_timestamp": self.next_timestamp,
@@ -23,7 +24,7 @@ class Block:
     
     def deserialize(block_serialized):
         return Block(
-            block_serialized["index"],
+            block_serialized["height"],
             block_serialized["transactions"],
             block_serialized["timestamp"],
             block_serialized["next_timestamp"],

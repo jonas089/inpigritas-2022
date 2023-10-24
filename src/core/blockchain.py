@@ -1,5 +1,6 @@
 from core.block import Block
 from core.factory import BlockFactory
+import sqlite3
 
 class BlockChain:
     def __init__(self, path_to_db):
@@ -13,7 +14,12 @@ class BlockChain:
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS blocks (
                 id INTEGER PRIMARY KEY,
-                serialized_block TEXT NOT NULL
+                height INTEGER NOT NULL,
+                timestamp TEXT NOT NULL,
+                next_timestamp TEXT NOT NULL,
+                hash TEXT NOT NULL,
+                next_hash TEXT NOT NULL,
+                prev_hash TEXT NOT NULL
             )
         ''')
         self.conn.commit()
@@ -32,19 +38,36 @@ class BlockChain:
             # save a new block
             self.connect()
             cursor = self.conn.cursor()
-            cursor.execute("INSERT INTO blocks (serialized_block) VALUES (?)", (serialized_block,))
+            cursor.execute("INSERT INTO blocks (height, timestamp, next_timestamp, hash, next_hash, prev_hash) VALUES (?,?,?,?,?,?)", 
+            (
+                serialized_block['height'],
+                serialized_block['timestamp'],
+                serialized_block['next_timestamp'],
+                serialized_block['hash'],
+                serialized_block['next_hash'],
+                serialized_block['prev_hash']
+            ))
             self.conn.commit()
         finally:
             self.disconnect()
 
-    def get_block_by_index(self, height):
+    def get_block_by_height(self, height):
         try:
             self.connect()
             cursor = self.conn.cursor()
             # The height is 1-indexed based on your comment, so we're querying with height - 1
-            cursor.execute("SELECT serialized_block FROM blocks WHERE id = ?", (height,))
+            cursor.execute("SELECT * FROM blocks WHERE height = ?", (height))
             row = cursor.fetchone()
-            return Block.deserialize(row[0]) if row else None
+            block = Block(
+                row[1],
+                [],
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6]
+            )
+            return Block if row else None
         finally:
             self.disconnect()
 
@@ -52,8 +75,17 @@ class BlockChain:
         try:
             self.connect()
             cursor = self.conn.cursor()
-            cursor.execute("SELECT serialized_block FROM blocks ORDER BY id DESC LIMIT 1")
+            cursor.execute("SELECT * FROM blocks ORDER BY id DESC LIMIT 1")
             row = cursor.fetchone()
-            return Block.deserialize(row[0]) if row else None
+            block = Block(
+                row[1],
+                [],
+                row[2],
+                row[3],
+                row[4],
+                row[5],
+                row[6]
+            )
+            return Block if row else None
         finally:
             self.disconnect()
