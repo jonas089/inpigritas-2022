@@ -23,6 +23,9 @@ class Tx:
             tx_serialized["timestamp"],
             tx_serialized["signature"]
         )
-
+    # verify transaction signature
     def verify(self):
+        pass
+    # propose transaction to network
+    def propose(self):
         pass

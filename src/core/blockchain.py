@@ -67,7 +67,7 @@ class BlockChain:
                 row[5],
                 row[6]
             )
-            return Block if row else None
+            return block if row else None
         finally:
             self.disconnect()
 
@@ -86,6 +86,6 @@ class BlockChain:
                 row[5],
                 row[6]
             )
-            return Block if row else None
+            return block if row else None
         finally:
             self.disconnect()
