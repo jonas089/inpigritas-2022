@@ -2,6 +2,8 @@
 
 Inpigritas is an experimental mini-project representing an MVP blockchain transaction network with noticable compromises.
 
+Refactoring [here](https://github.com/jonas089/Inpigritas-2022/tree/concept)
+
 # High-level XMind map 
 ![Inpigritas intro](https://github.com/jonas089/Inpigritas-2022/blob/master/high-level-mindmap.png)
 
