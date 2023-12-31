@@ -1,6 +1,7 @@
 # Python Blockchain Transaction network "Inpigritas" - Portfolio Project by Jonas Pauli
 
 Inpigritas is an experimental mini-project representing an MVP blockchain transaction network with noticable compromises.
+2023 review: Due to a lack of a consensus protocol, **Inpigritas can never achieve perfect synchronisation**. 
 
 Refactoring [here](https://github.com/jonas089/Inpigritas-2022/tree/concept)
 
