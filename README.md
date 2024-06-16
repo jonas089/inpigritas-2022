@@ -6,9 +6,6 @@ Inpigritas is an experimental mini-project representing an MVP blockchain transa
 
 Refactoring [here](https://github.com/jonas089/Inpigritas-2022/tree/concept)
 
-# High-level XMind map 
-![Inpigritas intro](https://github.com/jonas089/Inpigritas-2022/blob/master/high-level-mindmap.png)
-
 ## Implementation
 Inpigritas is a blockchain transaction system that can validate actions from a Genesis Block onwards.
 
